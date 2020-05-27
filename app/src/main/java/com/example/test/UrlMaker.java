@@ -8,6 +8,8 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UrlMaker {
 
@@ -23,7 +25,6 @@ public class UrlMaker {
     }
 
     // создание ссылки Дизера
-    // доделать
     static String MakeDeezerUrl(String[] Input) {
         char[] songName = Input[1].toCharArray();
         char[] Artist = Input[0].toCharArray();
@@ -42,10 +43,16 @@ public class UrlMaker {
 
         String newURL = "https://www.deezer.com/search/" + ArtistOut + "%20-%20" + songNameOut + "/track";
 
-        // нужен второй парсинг
         Document html = Parse(newURL);
-
-        return newURL;
+        Pattern p =Pattern.compile("SNG_ID\":\"[^\"\\r\\n]*\"");
+        String pars_idtreka = "";
+        Matcher m =p.matcher(html.toString());
+        while (m.find()){
+            pars_idtreka = m.group();
+        }
+        String idtreka = pars_idtreka.substring(9, (pars_idtreka.length()-1));
+        String finalURL = "https://www.deezer.com/track/" + idtreka;
+        return finalURL;
     }
 
     // создание ссылки в ВК

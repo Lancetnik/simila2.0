@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
             // получить данные о треке и генерируем новый юрл
             make_artist(url1);
-            String newURL = make_url();
+            String newURL = make_url(send_state);
             add_in_history("отправлено",Track[0],Track[1]);
 
             Intent intent2 = new Intent();
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Функция: открываем новый url способом по умолчанию
     void useUrl() {
-        String newURL = make_url();
+        String newURL = make_url(open_state);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newURL));
         startActivity(browserIntent);
         this.finish();
@@ -203,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Функция: создаем требуемый url, обращаясь к классу UrlMaker
-    public String make_url() {
-        String newURL = UrlMaker.make_url(open_state, Track);
+    public String make_url(int state) {
+        String newURL = UrlMaker.make_url(state, Track);
         return newURL;
     }
 
