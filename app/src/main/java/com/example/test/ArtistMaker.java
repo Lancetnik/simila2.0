@@ -37,8 +37,46 @@ public class ArtistMaker {
             html = Parse(url);
             Track = ArtistFromVK(html);
         }
+        else if (url.contains("google")) {
+            html = Parse(url);
+            Track = ArtistFromGoogle(html);
+            Log.w("Sh", Track[0]);
+            Log.w("Sh", Track[1]);
+        }
+        // шо там с шазамом
+        else if (url.contains("shazam")) {
+            html = Parse(url);
+            Track = ArtistFromShazam(html);
+            Log.w("Sh", Track[0]);
+        }
+        // доделать youtube
+        else if (url.contains("youtu")) {
+            html = Parse(url);
+            Track = ArtistFromYoutube(html);
+            Log.w("Sh", String.valueOf(html));
+        }
 
         return Track;
+    }
+
+    // получить из Google
+    // сделать
+    static String[] ArtistFromGoogle (Document html){
+        String[] data = html.getElementsByAttribute("itemprop").text().split("-");
+        String[] Output = new String[2];
+        Output[0] = data[0];
+        Output[1] = data[1];
+        return Output;
+    }
+
+    // получить из Shazam
+    // сделать
+    static String[] ArtistFromShazam (Document html){
+        String data = html.getElementsByAttribute("title line-clamp-2").toString();
+        String[] Output = new String[2];
+        Output[0] = data;
+        Output[1] = null;
+        return Output;
     }
 
     // получить из прямой ссылки Яндекса
@@ -149,9 +187,8 @@ public class ArtistMaker {
         return Output;
     }
 
-    // Не работает потому что гребаный ютуб всегда открывает свои ссылки сам
-    // Не получается отобрать у него его ссылку
-    // Для гугла та же история, не отдает свои ссылки
+    // получить из Ютуба
+    // сделать
     static String[] ArtistFromYoutube (Document html){
         String data = html.getElementsByAttribute("ytd-video-primary-info-render").toString();
         String[] Output = new String[2];

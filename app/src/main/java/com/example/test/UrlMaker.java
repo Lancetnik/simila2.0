@@ -20,8 +20,18 @@ public class UrlMaker {
         if (open_state == 2)  newUrl = MakeYoutubeUrl(Track);
         //if (open_state == 3)  newUrl = MakeShazamUrl(Track);
         if (open_state == 4)  newUrl = MakeDeezerUrl(Track);
-        //if (open_state == 5)  newUrl = MakeGoogleUrl(Track);
+        if (open_state == 5)  newUrl = MakeGoogleUrl(Track);
         return newUrl;
+    }
+
+    // создание ссылки Гугла
+    // научиться парсить поисковый запрос
+    static  String MakeGoogleUrl(String[] Input){
+        // https://play.google.com/music/listen?u=0#/sr/Arctic+Monkeys+-+Red+Right+Hand
+        String newUrl = "https://play.google.com/music/listen?u=0#/sr/"+Input[0].replace(" ","+")+"+-+"+Input[1].replace(" ","+");
+        Document html = Parse(newUrl);
+        Log.w("Goo", String.valueOf(html));
+        return  newUrl;
     }
 
     // создание ссылки Дизера
