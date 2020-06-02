@@ -33,23 +33,23 @@ public class ArtistMaker {
             html = Parse(url);
             Track = ArtistFromYSearch(html);
         }
-        else if (url.contains("vk.com")) {
-            html = Parse(url);
-            Track = ArtistFromVK(html);
-        }
         else if (url.contains("google")) {
             html = Parse(url);
             Track = ArtistFromGoogle(html);
-            Log.w("Sh", Track[0]);
-            Log.w("Sh", Track[1]);
+        }
+        // шо там с ВК
+        else if (url.contains("vk.com")) {
+            html = Parse(url);
+            Track = ArtistFromVK(html);
+            Log.w("Sh", String.valueOf(html));
         }
         // шо там с шазамом
         else if (url.contains("shazam")) {
             html = Parse(url);
             Track = ArtistFromShazam(html);
-            Log.w("Sh", Track[0]);
+            Log.w("Sh",  String.valueOf(html));
         }
-        // доделать youtube
+        // шо там с youtube
         else if (url.contains("youtu")) {
             html = Parse(url);
             Track = ArtistFromYoutube(html);
@@ -59,24 +59,37 @@ public class ArtistMaker {
         return Track;
     }
 
-    // получить из Google
+    // получить из Ютуба
     // сделать
-    static String[] ArtistFromGoogle (Document html){
-        String[] data = html.getElementsByAttribute("itemprop").text().split("-");
+    static String[] ArtistFromYoutube (Document html){
         String[] Output = new String[2];
-        Output[0] = data[0];
-        Output[1] = data[1];
+        Output[0] = null;
+        Output[1] = null;
+        return Output;
+    }
+
+    // получить из VK
+    //не работает, непонятно откуда получить данные
+    static String[] ArtistFromVK (Document html){
+        String[] Output = new String[2];
+        Output[0] = null;
+        Output[1] = null;
         return Output;
     }
 
     // получить из Shazam
     // сделать
     static String[] ArtistFromShazam (Document html){
-        String data = html.getElementsByAttribute("title line-clamp-2").toString();
         String[] Output = new String[2];
-        Output[0] = data;
+        Output[0] = null;
         Output[1] = null;
         return Output;
+    }
+
+    // получить из Google
+    static String[] ArtistFromGoogle (Document html){
+        String[] data = html.getElementsByAttribute("itemprop").text().split("-");
+        return data;
     }
 
     // получить из прямой ссылки Яндекса
@@ -187,23 +200,7 @@ public class ArtistMaker {
         return Output;
     }
 
-    // получить из Ютуба
-    // сделать
-    static String[] ArtistFromYoutube (Document html){
-        String data = html.getElementsByAttribute("ytd-video-primary-info-render").toString();
-        String[] Output = new String[2];
-        Output[0] = data;
-        Output[1] = null;
-        return Output;
-    }
-
-    //не работает, непонятно откуда получить данные
-    static String[] ArtistFromVK (Document html){
-        String[] Output = new String[2];
-        Output[0] = null;
-        Output[1] = null;
-        return Output;
-    }
+    // из поисковых ссылок Apple, Google, VK, разных ссылрк Youtub'a
 
     static Document Parse (String url) {
         Document html = null;

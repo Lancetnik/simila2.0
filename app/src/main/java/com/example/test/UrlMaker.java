@@ -1,12 +1,9 @@
 package com.example.test;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,21 +13,72 @@ public class UrlMaker {
     static String make_url (Integer open_state, String[] Track) {
         String newUrl = null;
         if (open_state == 0)  newUrl = MakeYandexUrl(Track);
-        if (open_state == 1)  newUrl = MakeVkUrl(Track);
+        if (open_state == 1)  newUrl = MakeVkUrl(Track); // not working as well
         if (open_state == 2)  newUrl = MakeYoutubeUrl(Track);
-        //if (open_state == 3)  newUrl = MakeShazamUrl(Track);
+        if (open_state == 3)  newUrl = MakeShazamUrl(Track); // not working
         if (open_state == 4)  newUrl = MakeDeezerUrl(Track);
-        if (open_state == 5)  newUrl = MakeGoogleUrl(Track);
+        if (open_state == 5)  newUrl = MakeGoogleUrl(Track); // not working as well
+        if (open_state == 6)  newUrl = MakeAppleUrl(Track); // not working as well
         return newUrl;
     }
 
     // создание ссылки Гугла
     // научиться парсить поисковый запрос
     static  String MakeGoogleUrl(String[] Input){
-        // https://play.google.com/music/listen?u=0#/sr/Arctic+Monkeys+-+Red+Right+Hand
+        // Поисковая ссылка https://play.google.com/music/listen?u=0#/sr/Arctic+Monkeys+-+Red+Right+Hand
+        // Прямая ссылка https://play.google.com/music/m/Trkthdqnc5gfwnjemyffociu7iq?t=Im_Ready_-_Sam_Smith
         String newUrl = "https://play.google.com/music/listen?u=0#/sr/"+Input[0].replace(" ","+")+"+-+"+Input[1].replace(" ","+");
+        // нужно из поисковой сделать прямую
         Document html = Parse(newUrl);
-        Log.w("Goo", String.valueOf(html));
+        Log.w("Google", String.valueOf(html));
+        return  newUrl;
+    }
+
+    // создание ссылки Apple
+    // научиться парсить поисковый запрос
+    static  String MakeAppleUrl(String[] Input){
+        // Прямая ссылка https://music.apple.com/ru/album/music-lovers/1501555269?i=1501555274
+        // Поисковая ссылка https://music.apple.com/ru/search?term=порнофильмы%20-%20%дядя%20володя
+        // Прямая ссылка String newUrl = "https://music.apple.com/ru/album/" + Input[1].replace(" ","-") /* + научиться доставать ID трека*/ ;
+        String newUrl = " https://music.apple.com/ru/search?term=" + Input[0].replace(" ","%20") + "%20-%20" +  Input[1].replace(" ","%20");
+        // нужно из поисковой сделать прямую
+        Document html = Parse(newUrl);
+        Log.w("Apple", String.valueOf(html));
+        return  newUrl;
+    }
+
+    // создание ссылки в ВК
+    // научиться парсить поисковый запрос
+    static String MakeVkUrl(String[] Input) {
+        char[] songName = Input[1].toCharArray();
+        char[] Artist = Input[0].toCharArray();
+        String ArtistOut = "";
+        String songNameOut = "";
+
+        for (int i = 0; i < songName.length; i++) {
+            if (songName[i] != ' ') songNameOut += songName[i];
+            else songNameOut += "%20";
+        }
+
+        for (int i = 0; i < Artist.length; i++) {
+            if (Artist[i] != ' ') ArtistOut += Artist[i];
+            else ArtistOut += "%20";
+        }
+
+        String newURL = "https://vk.com/audio?q=" + ArtistOut + "%20-%20" + songNameOut;
+
+        Document html = Parse(newURL);
+        Log.w("VK", String.valueOf(html));
+
+        return newURL;
+    }
+
+    // создание ссылки Shazam
+    // сделать
+    static  String MakeShazamUrl(String[] Input){
+        // https://www.shazam.com/ru/track/376666093/я-так-соскучился
+        String newUrl = "https://www.shazam.com/ru/track/" /*+ научиться доставать ID трека*/ + "/"+Input[1].replace(" ","-");
+        Log.w("Shazam", newUrl);
         return  newUrl;
     }
 
@@ -65,28 +113,6 @@ public class UrlMaker {
         return finalURL;
     }
 
-    // создание ссылки в ВК
-    static String MakeVkUrl(String[] Input) {
-        char[] songName = Input[1].toCharArray();
-        char[] Artist = Input[0].toCharArray();
-        String ArtistOut = "";
-        String songNameOut = "";
-
-        for (int i = 0; i < songName.length; i++) {
-            if (songName[i] != ' ') songNameOut += songName[i];
-            else songNameOut += "%20";
-        }
-
-        for (int i = 0; i < Artist.length; i++) {
-            if (Artist[i] != ' ') ArtistOut += Artist[i];
-            else ArtistOut += "%20";
-        }
-
-        String newURL = "https://vk.com/audio?q=" + ArtistOut + "%20-%20" + songNameOut;
-
-        return newURL;
-    }
-
     // создание ссылки в Ютуб
     static String MakeYoutubeUrl(String[] Input) {
         char[] songName = Input[1].toCharArray();
@@ -108,9 +134,7 @@ public class UrlMaker {
         return newURL;
     }
 
-    // создание ссылки в Яндекс через 2-ой парсинг.
-    // Получаем название и артиста, формируем поисковую ссылку Яндекса
-    // Затем парсим поисковую ссылку Яндекса и получаем оттуда их внутренний id трека
+    // создание ссылки в Яндекс
     static String MakeYandexUrl(String[] Input) {
             char[] songName = Input[1].toCharArray();
             char[] Artist = Input[0].toCharArray();
