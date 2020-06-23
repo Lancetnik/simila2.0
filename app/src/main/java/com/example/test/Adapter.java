@@ -1,20 +1,14 @@
 package com.example.test;
 
 import android.content.Context;
-import android.content.Intent;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.example.test.DetailActivity;
-import com.example.test.Model;
-import com.example.test.R;
 
 import java.util.List;
 
@@ -31,7 +25,8 @@ public class Adapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return Integer.MAX_VALUE;
+        if (models != null && models.size() > 0) return models.size() * 1000;
+        else return 1;
     }
 
     @Override
@@ -48,10 +43,8 @@ public class Adapter extends PagerAdapter {
         ImageView imageView;
         int i = position % models.size();
 
-        imageView = view.findViewById(R.id.image);
-
+        imageView = view.findViewById(R.id.current_img);
         imageView.setImageResource(models.get(i).getImage());
-
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

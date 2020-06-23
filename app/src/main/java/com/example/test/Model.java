@@ -4,7 +4,6 @@ public class Model {
 
     private int image;
 
-
     public Model(int image) {
         this.image = image;
     }

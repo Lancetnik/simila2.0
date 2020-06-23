@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout"
-    android:background="#053542"
+    android:background="@color/font"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -18,48 +18,231 @@
         android:layout_marginTop="50dp"
         tools:context=".MainActivity"
         android:layout_height="200dp">
-
     </androidx.viewpager.widget.ViewPager>
 
+    <ImageView
+        android:layout_marginTop="17dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/open_logo">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/Img1Pager1"
+
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="60dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img2Pager1"
+
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="90dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img3Pager1"
+
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="120dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img4Pager1"
+
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="150dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img5Pager1"
+
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="180dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img6Pager1"
+
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="210dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img7Pager1"
+
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="240dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager2"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_centerInParent="false"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="250dp"
         android:clipToPadding="false"
         android:foregroundGravity="top"
-        android:overScrollMode="always"
-        >
-
+        android:overScrollMode="always">
     </androidx.viewpager.widget.ViewPager>
 
-    <Button
-        android:id="@+id/btnSelect"
-        android:layout_width="150dp"
-        android:layout_height="70dp"
+    <ImageView
+        android:layout_marginTop="217dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:foregroundGravity="bottom"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:textColor="#fff" />
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/send_logo">
+    </ImageView>
 
-    <Button
-        android:id="@+id/btnDefault"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="100dp"
-        android:layout_toEndOf="@+id/btnSelect"
-        android:foregroundGravity="bottom"
-        android:textColor="#fff" />
+    <ImageView
+        android:id="@+id/Img1Pager2"
 
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="60dp"
 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
 
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img2Pager2"
+
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="90dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img3Pager2"
+
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="120dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img4Pager2"
+
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="150dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img5Pager2"
+
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="180dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img6Pager2"
+
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="210dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
+    <ImageView
+        android:id="@+id/Img7Pager2"
+
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="240dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+
+        android:src="@drawable/point"
+        >
+    </ImageView>
 
 </RelativeLayout>

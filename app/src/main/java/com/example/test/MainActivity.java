@@ -7,18 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import java.lang.reflect.Field;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
     ViewPager viewPager2;
     Adapter adapter;
-    List<Model> models = new ArrayList<>();
-    Button btn1;
+    ArrayList<Model> models = new ArrayList<>();
 
     // для сохранения
     private SharedPreferences sPref;
@@ -80,10 +75,8 @@ public class MainActivity extends AppCompatActivity {
         // открываем само приложение
         if (url == null) {
             setContentView(R.layout.activity_main);
-            btn1 = (Button) findViewById(R.id.btnDefault);
             RelativeLayout relativeLayout = findViewById(R.id.layout);
 
-//
             models.add(new Model(R.drawable.yandex));
             models.add(new Model(R.drawable.vk));
             models.add(new Model(R.drawable.youtube));
@@ -91,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             models.add(new Model(R.drawable.deezer));
             models.add(new Model(R.drawable.google));
             models.add(new Model(R.drawable.apple));
-
 
             adapter = new Adapter(models, this);
 
@@ -104,75 +96,36 @@ public class MainActivity extends AppCompatActivity {
             viewPager2.setPadding(200, 0, 200, 0);
 
             // устанавливаем выбор на значения на момент закрытия
-            viewPager.setCurrentItem(open_state);
-            viewPager2.setCurrentItem(send_state);
+            viewPager.setCurrentItem(open_state + models.size()*50,false);
+            point_it(open_state, 1);
+            viewPager2.setCurrentItem(send_state + models.size()*50, false);
+            point_it(send_state,2);
 
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    if (position < (adapter.getCount() - 1)) {
-
-                    }
-                }
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
                 @Override
                 public void onPageSelected(int position) {
-                    int j = position % models.size();
-                    open_state = j;
-                    final int childCount = viewPager.getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        final View child = viewPager.getChildAt(i);
-                        child.setPadding(0,0,0,0);
-                        final ViewPager.LayoutParams lp = (ViewPager.LayoutParams) child.getLayoutParams();
-                        int position1 = 0;
-                        try {
-                            Field f = lp.getClass().getDeclaredField("position");
-                            f.setAccessible(true);
-                            position1 = f.getInt(lp); //IllegalAccessException
-                        } catch (NoSuchFieldException | IllegalAccessException ex) {ex.printStackTrace();}
-                        if (position1 == viewPager.getCurrentItem()  ) {
-                            child.setPadding(0,100,0,0);
-                        }
-                    }
+                    open_state = position % models.size();
+                    point_it(open_state, 1);
                 }
 
                 @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
+                public void onPageScrollStateChanged(int state) {}
             });
             viewPager2.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    if (position < (adapter.getCount() - 1)) {
-
-                    }
-                }
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
                 @Override
                 public void onPageSelected(int position) {
-                    int j = position % models.size();
-                    send_state = j;
-                    final int childCount = viewPager2.getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        final View child = viewPager2.getChildAt(i);
-                        child.setPadding(0,0,0,0);
-                        final ViewPager.LayoutParams lp = (ViewPager.LayoutParams) child.getLayoutParams();
-                        int position1 = 0;
-                        try {
-                            Field f = lp.getClass().getDeclaredField("position");
-                            f.setAccessible(true);
-                            position1 = f.getInt(lp); //IllegalAccessException
-                        } catch (NoSuchFieldException | IllegalAccessException ex) {ex.printStackTrace();}
-                        if (position1 == viewPager2.getCurrentItem()  ) {
-                            child.setPadding(0,0,0,100);
-                        }
-                    }
+                    send_state = position % models.size();
+                    point_it(send_state, 2);
                 }
 
                 @Override
-                public void onPageScrollStateChanged(int state) {
-                }
+                public void onPageScrollStateChanged(int state) {}
             });
         }
 
@@ -206,6 +159,102 @@ public class MainActivity extends AppCompatActivity {
     public String make_url(int state) {
         String newURL = UrlMaker.make_url(state, Track);
         return newURL;
+    }
+
+    public void point_it (int number, int pager) {
+        number += 1;
+        if (pager == 1) {
+            ImageView first = findViewById(R.id.Img1Pager1);
+            first.setImageResource(R.drawable.point);
+            ImageView second = findViewById(R.id.Img2Pager1);
+            second.setImageResource(R.drawable.point);
+            ImageView third = findViewById(R.id.Img3Pager1);
+            third.setImageResource(R.drawable.point);
+            ImageView fourth = findViewById(R.id.Img4Pager1);
+            fourth.setImageResource(R.drawable.point);
+            ImageView fifth = findViewById(R.id.Img5Pager1);
+            fifth.setImageResource(R.drawable.point);
+            ImageView sixth = findViewById(R.id.Img6Pager1);
+            sixth.setImageResource(R.drawable.point);
+            ImageView seventh = findViewById(R.id.Img7Pager1);
+            seventh.setImageResource(R.drawable.point);
+            switch (number) {
+                case 1: {
+                    first.setImageResource(R.drawable.active_point);
+                    break;
+                }
+                case 2: {
+                    second.setImageResource(R.drawable.active_point);
+                    break;
+                }
+                case 3: {
+                    third.setImageResource(R.drawable.active_point);
+                    break;
+                }
+                case 4: {
+                    fourth.setImageResource(R.drawable.active_point);
+                    break;
+                }
+                case 5: {
+                    fifth.setImageResource(R.drawable.active_point);
+                    break;
+                }
+                case 6: {
+                    sixth.setImageResource(R.drawable.active_point);
+                    break;
+                }
+                case 7: {
+                    seventh.setImageResource(R.drawable.active_point);
+                    break;
+                }
+            }
+        }
+        if (pager == 2) {
+                ImageView first = findViewById(R.id.Img1Pager2);
+                first.setImageResource(R.drawable.point);
+                ImageView second = findViewById(R.id.Img2Pager2);
+                second.setImageResource(R.drawable.point);
+                ImageView third = findViewById(R.id.Img3Pager2);
+                third.setImageResource(R.drawable.point);
+                ImageView fourth = findViewById(R.id.Img4Pager2);
+                fourth.setImageResource(R.drawable.point);
+                ImageView fifth = findViewById(R.id.Img5Pager2);
+                fifth.setImageResource(R.drawable.point);
+                ImageView sixth = findViewById(R.id.Img6Pager2);
+                sixth.setImageResource(R.drawable.point);
+                ImageView seventh = findViewById(R.id.Img7Pager2);
+                seventh.setImageResource(R.drawable.point);
+                switch (number) {
+                    case 1: {
+                        first.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                    case 2: {
+                        second.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                    case 3: {
+                        third.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                    case 4: {
+                        fourth.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                    case 5: {
+                        fifth.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                    case 6: {
+                        sixth.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                    case 7: {
+                        seventh.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                }
+        }
     }
 
     // загрузка сохраненного выбора в локальный файл
