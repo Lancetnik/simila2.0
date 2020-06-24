@@ -1,30 +1,40 @@
 package com.example.test;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // скроллеры
     ViewPager viewPager;
     ViewPager viewPager2;
     Adapter adapter;
     ArrayList<Model> models = new ArrayList<>();
+
+    // выпадающее меню
+    Toolbar toolbar;
+    DrawerLayout drawerLayout;
+    NavigationView nav_view;
 
     // для сохранения
     private SharedPreferences sPref;
@@ -75,8 +85,26 @@ public class MainActivity extends AppCompatActivity {
         // открываем само приложение
         if (url == null) {
             setContentView(R.layout.activity_main);
-            RelativeLayout relativeLayout = findViewById(R.id.layout);
 
+            // выпадающее меню
+            toolbar = findViewById(R.id.toolbar);
+            drawerLayout = findViewById(R.id.drawer_layout);
+            nav_view = findViewById(R.id.nav_view);
+            setSupportActionBar(toolbar);
+
+            ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                    this,
+                    drawerLayout,
+                    toolbar,
+                    R.string.tutorial,
+                    R.string.tutorial
+            );
+
+            drawerLayout.addDrawerListener(actionBarDrawerToggle);
+            actionBarDrawerToggle.syncState();
+            nav_view.setNavigationItemSelectedListener(this);
+
+            // заполняем список приложений для скроллеров
             models.add(new Model(R.drawable.yandex));
             models.add(new Model(R.drawable.vk));
             models.add(new Model(R.drawable.youtube));
@@ -92,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             viewPager.setAdapter(adapter);
             viewPager2.setAdapter(adapter);
 
+            // горизонтальные отступы между объектами скроллеров
             viewPager.setPadding(200, 0, 200, 0);
             viewPager2.setPadding(200, 0, 200, 0);
 
@@ -101,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             viewPager2.setCurrentItem(send_state + models.size()*50, false);
             point_it(send_state,2);
 
+            // создание скроллеров
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -157,10 +187,10 @@ public class MainActivity extends AppCompatActivity {
 
     // Функция: создаем требуемый url, обращаясь к классу UrlMaker
     public String make_url(int state) {
-        String newURL = UrlMaker.make_url(state, Track);
-        return newURL;
+        return UrlMaker.make_url(state, Track);
     }
 
+    // Подсветка нужной точки навигации
     public void point_it (int number, int pager) {
         number += 1;
         if (pager == 1) {
@@ -301,5 +331,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         save();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 }

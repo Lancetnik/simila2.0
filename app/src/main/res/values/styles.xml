@@ -1,25 +1,10 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
-        <item name="colorPrimary">@color/font</item>
-        <item name="colorPrimaryDark">@color/yellow</item>
-        <item name="colorAccent">@color/font</item>
-        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
-        <item name="android:navigationBarColor">@color/font</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/font</item>
-    </style>
-
-    <style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar">
-        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleText</item>
-        <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleText</item>
-        <item name="background">@color/yellow</item>
-        <item name="android:height">150dp</item>
-        <item name="height">60dp</item>
-    </style>
-
-    <style name="AppTheme.ActionBar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textSize">20dp</item>
-        <item name="android:textColor">@color/font</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarColor">@color/Primary</item>
     </style>
 
 </resources>
