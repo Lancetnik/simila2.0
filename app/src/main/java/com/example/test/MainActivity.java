@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import androidx.appcompat.widget.Toolbar;
@@ -58,114 +57,137 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Intent intent = getIntent();
         String url = intent.getDataString();
 
-        // передача ссылки
-        if (intent.getClipData()!=null && url==null) {
+        // отправляем ссылку самому себе, чтобы открыть в другом приложении
+        if (intent.getClipData()!=null && String.valueOf(intent.getClipData()).contains("Simila")){
             // получаем URL из ссылки регуляркой
             String str = String.valueOf(intent.getClipData());
             Pattern p = Pattern.compile("http.*");
             Matcher m = p.matcher(str);
             String url1 = "";
             while(m.find()){
-                url1 = m.group().substring(0,(m.group().length()-3));
+                url1 = m.group().substring(0,(m.group().length()-35));
             }
 
-            // получить данные о треке и генерируем новый юрл
-            make_artist(url1);
-            String newURL = make_url(send_state);
-            add_in_history("отправлено",Track[0],Track[1]);
-
-            Intent intent2 = new Intent();
-            intent2.setAction(Intent.ACTION_SEND);
-            intent2.setType("text/plain");
-            intent2.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
-            startActivity(Intent.createChooser(intent2, "Share"));
-            this.finish();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
+            startActivity(browserIntent);
+            this.onStop();
         }
 
-        // открываем само приложение
-        if (url == null) {
-            setContentView(R.layout.activity_main);
-
-            // выпадающее меню
-            toolbar = findViewById(R.id.toolbar);
-            drawerLayout = findViewById(R.id.drawer_layout);
-            nav_view = findViewById(R.id.nav_view);
-            setSupportActionBar(toolbar);
-
-            ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
-                    this,
-                    drawerLayout,
-                    toolbar,
-                    R.string.tutorial,
-                    R.string.tutorial
-            );
-
-            drawerLayout.addDrawerListener(actionBarDrawerToggle);
-            actionBarDrawerToggle.syncState();
-            nav_view.setNavigationItemSelectedListener(this);
-
-            // заполняем список приложений для скроллеров
-            models.add(new Model(R.drawable.yandex));
-            models.add(new Model(R.drawable.vk));
-            models.add(new Model(R.drawable.youtube));
-            models.add(new Model(R.drawable.shazam));
-            models.add(new Model(R.drawable.deezer));
-            models.add(new Model(R.drawable.google));
-            models.add(new Model(R.drawable.apple));
-
-            adapter = new Adapter(models, this);
-
-            viewPager = findViewById(R.id.viewPager);
-            viewPager2 = findViewById(R.id.viewPager2);
-            viewPager.setAdapter(adapter);
-            viewPager2.setAdapter(adapter);
-
-            // горизонтальные отступы между объектами скроллеров
-            viewPager.setPadding(200, 0, 200, 0);
-            viewPager2.setPadding(200, 0, 200, 0);
-
-            // устанавливаем выбор на значения на момент закрытия
-            viewPager.setCurrentItem(open_state + models.size()*50,false);
-            point_it(open_state, 1);
-            viewPager2.setCurrentItem(send_state + models.size()*50, false);
-            point_it(send_state,2);
-
-            // создание скроллеров
-            viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-                @Override
-                public void onPageSelected(int position) {
-                    open_state = position % models.size();
-                    point_it(open_state, 1);
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {}
-            });
-            viewPager2.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-                @Override
-                public void onPageSelected(int position) {
-                    send_state = position % models.size();
-                    point_it(send_state, 2);
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {}
-            });
-        }
-
-        // открываем полученные ссылки
         else {
-            // получить данные о треке
-            make_artist(url);
-            add_in_history("получено",Track[0],Track[1]);
-            // выполнить новую ссылку
-            useUrl();
+            // передача ссылки
+            if (intent.getClipData() != null && url == null) {
+                // получаем URL из ссылки регуляркой
+                String str = String.valueOf(intent.getClipData());
+                Pattern p = Pattern.compile("http.*");
+                Matcher m = p.matcher(str);
+                String url1 = "";
+                while (m.find()) {
+                    url1 = m.group().substring(0, (m.group().length() - 3));
+                }
+
+                // получить данные о треке и генерируем новый юрл
+                make_artist(url1);
+                String newURL = make_url(send_state);
+                add_in_history("отправлено", Track[0], Track[1]);
+
+                Intent intent2 = new Intent();
+                intent2.setAction(Intent.ACTION_SEND);
+                intent2.setType("text/plain");
+                intent2.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
+                startActivity(Intent.createChooser(intent2, "Share"));
+                this.onStop();
+            }
+            else {
+                // открываем само приложение
+                if (url == null) {
+                    setContentView(R.layout.activity_main);
+
+                    // выпадающее меню
+                    toolbar = findViewById(R.id.toolbar);
+                    drawerLayout = findViewById(R.id.drawer_layout);
+                    nav_view = findViewById(R.id.nav_view);
+                    setSupportActionBar(toolbar);
+
+                    ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                            this,
+                            drawerLayout,
+                            toolbar,
+                            R.string.tutorial,
+                            R.string.tutorial
+                    );
+
+                    drawerLayout.addDrawerListener(actionBarDrawerToggle);
+                    actionBarDrawerToggle.syncState();
+                    nav_view.setNavigationItemSelectedListener(this);
+
+                    // заполняем список приложений для скроллеров
+                    models.add(new Model(R.drawable.yandex));
+                    models.add(new Model(R.drawable.vk));
+                    models.add(new Model(R.drawable.youtube));
+                    models.add(new Model(R.drawable.shazam));
+                    models.add(new Model(R.drawable.deezer));
+                    models.add(new Model(R.drawable.google));
+                    models.add(new Model(R.drawable.apple));
+
+                    adapter = new Adapter(models, this);
+
+                    viewPager = findViewById(R.id.viewPager);
+                    viewPager2 = findViewById(R.id.viewPager2);
+                    viewPager.setAdapter(adapter);
+                    viewPager2.setAdapter(adapter);
+
+                    // горизонтальные отступы между объектами скроллеров
+                    viewPager.setPadding(200, 0, 200, 0);
+                    viewPager2.setPadding(200, 0, 200, 0);
+
+                    // устанавливаем выбор на значения на момент закрытия
+                    viewPager.setCurrentItem(open_state + models.size() * 50, false);
+                    point_it(open_state, 1);
+                    viewPager2.setCurrentItem(send_state + models.size() * 50, false);
+                    point_it(send_state, 2);
+
+                    // создание скроллеров
+                    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+                            open_state = position % models.size();
+                            point_it(open_state, 1);
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+                        }
+                    });
+                    viewPager2.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+                            send_state = position % models.size();
+                            point_it(send_state, 2);
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+                        }
+                    });
+                }
+
+                // открываем полученные ссылки
+                else {
+                    // получить данные о треке
+                    make_artist(url);
+                    add_in_history("получено", Track[0], Track[1]);
+                    // выполнить новую ссылку
+                    useUrl();
+                }
+            }
         }
 
         // сохранение истории и выбранных параметров
@@ -177,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String newURL = make_url(open_state);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newURL));
         startActivity(browserIntent);
-        this.finish();
+        this.onStop();
     }
 
     // Функция: получаем данные о треке, обращаясь к классу ArtistMaker
@@ -312,8 +334,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for(String pq : history) {
             historyset += pq;
         }
-//
-        Log.w("Send", String.valueOf(send_state));
+
         ed.putString("str", historyset);
         ed.putInt("open_state", open_state);
         ed.putInt("send_state", send_state);
