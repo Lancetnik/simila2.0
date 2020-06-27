@@ -11,7 +11,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -23,7 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
     // скроллеры
     ViewPager viewPager;
     ViewPager viewPager2;
@@ -42,6 +46,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ArrayDeque<String> history = new ArrayDeque<String>();
     // определяет размер истории, менять тут
     Integer history_size = 20;
+
+    // буфер
+    CheckBox buffer;
+    Boolean Is_Buffer = false;
+    ArrayList <String> buffer_container = new ArrayList<>();
 
     String[] Track;
 
@@ -70,9 +79,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
             startActivity(browserIntent);
-            this.onStop();
+            this.finish();
         }
-
         else {
             // передача ссылки
             if (intent.getClipData() != null && url == null) {
@@ -90,93 +98,140 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String newURL = make_url(send_state);
                 add_in_history("отправлено", Track[0], Track[1]);
 
-                Intent intent2 = new Intent();
-                intent2.setAction(Intent.ACTION_SEND);
-                intent2.setType("text/plain");
-                intent2.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
-                startActivity(Intent.createChooser(intent2, "Share"));
-                this.onStop();
+                // сохраняем в буфер, если он выбран
+                if(Is_Buffer){
+                    buffer_container.add(newURL);
+                    this.finish();
+                }
+                // отправляем напрямую, если нет буфера
+                else {
+                    Intent intent2 = new Intent();
+                    intent2.setAction(Intent.ACTION_SEND);
+                    intent2.setType("text/plain");
+                    intent2.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
+                    startActivity(Intent.createChooser(intent2, "Share"));
+                    this.onStop();
+                }
             }
             else {
                 // открываем само приложение
                 if (url == null) {
-                    setContentView(R.layout.activity_main);
+                    // открываем основное окно
+                    if (buffer_container.isEmpty()) {
+                        setContentView(R.layout.activity_main);
 
-                    // выпадающее меню
-                    toolbar = findViewById(R.id.toolbar);
-                    drawerLayout = findViewById(R.id.drawer_layout);
-                    nav_view = findViewById(R.id.nav_view);
-                    setSupportActionBar(toolbar);
+                        // буфер
+                        buffer = findViewById(R.id.IS_BUFFER);
+                        buffer.setChecked(Is_Buffer);
+                        buffer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                Is_Buffer = isChecked;
+                            }
+                        });
 
-                    ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
-                            this,
-                            drawerLayout,
-                            toolbar,
-                            R.string.tutorial,
-                            R.string.tutorial
-                    );
+                        // выпадающее меню
+                        toolbar = findViewById(R.id.toolbar);
+                        drawerLayout = findViewById(R.id.drawer_layout);
+                        nav_view = findViewById(R.id.nav_view);
+                        setSupportActionBar(toolbar);
 
-                    drawerLayout.addDrawerListener(actionBarDrawerToggle);
-                    actionBarDrawerToggle.syncState();
-                    nav_view.setNavigationItemSelectedListener(this);
+                        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                                this,
+                                drawerLayout,
+                                toolbar,
+                                R.string.tutorial,
+                                R.string.tutorial
+                        );
 
-                    // заполняем список приложений для скроллеров
-                    models.add(new Model(R.drawable.yandex));
-                    models.add(new Model(R.drawable.vk));
-                    models.add(new Model(R.drawable.youtube));
-                    models.add(new Model(R.drawable.shazam));
-                    models.add(new Model(R.drawable.deezer));
-                    models.add(new Model(R.drawable.google));
-                    models.add(new Model(R.drawable.apple));
+                        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+                        actionBarDrawerToggle.syncState();
+                        nav_view.setNavigationItemSelectedListener(this);
 
-                    adapter = new Adapter(models, this);
+                        // заполняем список приложений для скроллеров
+                        models.add(new Model(R.drawable.yandex));
+                        models.add(new Model(R.drawable.vk));
+                        models.add(new Model(R.drawable.youtube));
+                        models.add(new Model(R.drawable.shazam));
+                        models.add(new Model(R.drawable.deezer));
+                        models.add(new Model(R.drawable.google));
+                        models.add(new Model(R.drawable.apple));
 
-                    viewPager = findViewById(R.id.viewPager);
-                    viewPager2 = findViewById(R.id.viewPager2);
-                    viewPager.setAdapter(adapter);
-                    viewPager2.setAdapter(adapter);
+                        adapter = new Adapter(models, this);
 
-                    // горизонтальные отступы между объектами скроллеров
-                    viewPager.setPadding(200, 0, 200, 0);
-                    viewPager2.setPadding(200, 0, 200, 0);
+                        viewPager = findViewById(R.id.viewPager);
+                        viewPager2 = findViewById(R.id.viewPager2);
+                        viewPager.setAdapter(adapter);
+                        viewPager2.setAdapter(adapter);
 
-                    // устанавливаем выбор на значения на момент закрытия
-                    viewPager.setCurrentItem(open_state + models.size() * 50, false);
-                    point_it(open_state, 1);
-                    viewPager2.setCurrentItem(send_state + models.size() * 50, false);
-                    point_it(send_state, 2);
+                        // горизонтальные отступы между объектами скроллеров
+                        viewPager.setPadding(200, 0, 200, 0);
+                        viewPager2.setPadding(200, 0, 200, 0);
 
-                    // создание скроллеров
-                    viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                        }
+                        // устанавливаем выбор на значения на момент закрытия
+                        viewPager.setCurrentItem(open_state + models.size() * 50, false);
+                        point_it(open_state, 1);
+                        viewPager2.setCurrentItem(send_state + models.size() * 50, false);
+                        point_it(send_state, 2);
 
-                        @Override
-                        public void onPageSelected(int position) {
-                            open_state = position % models.size();
-                            point_it(open_state, 1);
-                        }
+                        // создание скроллеров
+                        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                            @Override
+                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                            }
 
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
-                        }
-                    });
-                    viewPager2.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                        }
+                            @Override
+                            public void onPageSelected(int position) {
+                                open_state = position % models.size();
+                                point_it(open_state, 1);
+                            }
 
-                        @Override
-                        public void onPageSelected(int position) {
-                            send_state = position % models.size();
-                            point_it(send_state, 2);
-                        }
+                            @Override
+                            public void onPageScrollStateChanged(int state) {
+                            }
+                        });
+                        viewPager2.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                            @Override
+                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                            }
 
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
-                        }
-                    });
+                            @Override
+                            public void onPageSelected(int position) {
+                                send_state = position % models.size();
+                                point_it(send_state, 2);
+                            }
+
+                            @Override
+                            public void onPageScrollStateChanged(int state) {
+                            }
+                        });
+                    }
+                    // открываем буфер
+                    else {
+                        setContentView(R.layout.buffer_layout);
+                        Button Send_button = findViewById(R.id.Send_button);
+                        View.OnClickListener send_button_listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent2 = new Intent();
+                                intent2.setAction(Intent.ACTION_SEND);
+                                intent2.setType("text/plain");
+
+                                String text_to_send = "";
+                                int count = 1;
+                                for (String i : buffer_container) {
+                                    text_to_send += String.valueOf(count) +") " + i + "\n";
+                                    count += 1;
+                                }
+
+                                intent2.putExtra(Intent.EXTRA_TEXT, text_to_send + " сгенерировано с помощью Simila");
+                                startActivity(Intent.createChooser(intent2, "Share"));
+
+                                buffer_container.clear();
+                                MainActivity.super.finish();
+                            }
+                        };
+                        Send_button.setOnClickListener(send_button_listener);
+                    }
                 }
 
                 // открываем полученные ссылки
@@ -313,6 +368,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void load() {
         open_state = sPref.getInt("open_state", 2);
         send_state = sPref.getInt("send_state", 2);
+
+        // загружаем историю
         if (sPref.contains("str")) {
             String str = sPref.getString("str","");
             String buf = "";
@@ -324,21 +381,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
+
+        // загружаем буфер
+        if (sPref.contains("buffer_container")) {
+            String str = sPref.getString("buffer_container","");
+            String buf = "";
+            for (int i = 0; i < str.length(); i++ ) {
+                if (str.charAt(i) == '|') {
+                    buffer_container.add(buf);
+                    buf = "";
+                    if ( i != str.length()-1) i+= 1;
+                }
+                buf = buf + str.charAt(i);
+            }
+        }
+
+        // загружаем значение чекбокса
+        if(sPref.contains("buf_state")) {
+            Is_Buffer = sPref.getBoolean("buf_state", false);
+        }
     }
 
     // сохранение выбора для дальнейшего открытия через него по умолчанию
     public void save() {
         SharedPreferences.Editor ed = sPref.edit();
 
-        String historyset = new String();
+        String historyset = "";
         for(String pq : history) {
             historyset += pq;
         }
 
+        // при закрытии сохраняем значение буфера
+        if(Is_Buffer) ed.putBoolean("buf_state", true);
+        else ed.putBoolean("buf_state", false);
+
+        String bufferset = "";
+        for(int i = 0; i < buffer_container.size(); i++){
+            bufferset += buffer_container.get(i);
+            bufferset += '|';
+        }
+
+        ed.putString("buffer_container", bufferset);
         ed.putString("str", historyset);
         ed.putInt("open_state", open_state);
         ed.putInt("send_state", send_state);
-        ed.commit();
+        ed.apply();
     }
 
     public void  add_in_history (String what_is_it, String artist_name, String song_name) {
