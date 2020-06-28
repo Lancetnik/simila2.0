@@ -11,21 +11,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".BufferActivity"></activity>
         <activity android:name=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -37,7 +36,6 @@
                     android:pathPrefix="/audio"
                     android:scheme="https" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -48,7 +46,6 @@
                     android:host="music.yandex.ru"
                     android:scheme="https" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -59,8 +56,6 @@
                     android:host="music.apple.com"
                     android:scheme="https" />
             </intent-filter>
-
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -74,7 +69,6 @@
                     android:host="www.deezer.com"
                     android:scheme="https" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -85,7 +79,6 @@
                     android:host="youtu.be"
                     android:scheme="https" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -96,7 +89,6 @@
                     android:host="play.google.com"
                     android:scheme="https" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -107,7 +99,6 @@
                     android:host="www.shazam.com"
                     android:scheme="https" />
             </intent-filter>
-
         </activity>
     </application>
 

@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // буфер
     CheckBox buffer;
     Boolean Is_Buffer = false;
-    ArrayList <String> buffer_container = new ArrayList<>();
+    public static ArrayList <String> buffer_container = new ArrayList<>();
 
     String[] Track;
 
@@ -99,10 +101,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 add_in_history("отправлено", Track[0], Track[1]);
 
                 // сохраняем в буфер, если он выбран
-                if(Is_Buffer){
+                if(Is_Buffer) {
                     buffer_container.add(newURL);
                     this.finish();
                 }
+
                 // отправляем напрямую, если нет буфера
                 else {
                     Intent intent2 = new Intent();
@@ -110,14 +113,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     intent2.setType("text/plain");
                     intent2.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
                     startActivity(Intent.createChooser(intent2, "Share"));
-                    this.onStop();
+                    this.finish();
                 }
             }
             else {
                 // открываем само приложение
                 if (url == null) {
                     // открываем основное окно
-                    if (buffer_container.isEmpty()) {
                         setContentView(R.layout.activity_main);
 
                         // буфер
@@ -204,34 +206,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onPageScrollStateChanged(int state) {
                             }
                         });
-                    }
-                    // открываем буфер
-                    else {
-                        setContentView(R.layout.buffer_layout);
-                        Button Send_button = findViewById(R.id.Send_button);
-                        View.OnClickListener send_button_listener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent2 = new Intent();
-                                intent2.setAction(Intent.ACTION_SEND);
-                                intent2.setType("text/plain");
 
-                                String text_to_send = "";
-                                int count = 1;
-                                for (String i : buffer_container) {
-                                    text_to_send += String.valueOf(count) +") " + i + "\n";
-                                    count += 1;
-                                }
-
-                                intent2.putExtra(Intent.EXTRA_TEXT, text_to_send + " сгенерировано с помощью Simila");
-                                startActivity(Intent.createChooser(intent2, "Share"));
-
-                                buffer_container.clear();
-                                MainActivity.super.finish();
-                            }
-                        };
-                        Send_button.setOnClickListener(send_button_listener);
-                    }
+                        // открываем буфер
+                        if (!buffer_container.isEmpty())  {
+                            Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
+                            startActivity(buffer);
+                        }
                 }
 
                 // открываем полученные ссылки
@@ -439,6 +419,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStop() {
         super.onStop();
         save();
+    }
+
+    @Override
+    // если мы передали ссылку в буфер, когда приложение было свернуто
+    protected void onResume() {
+        super.onResume();
+        // открываем буфер
+        if (!buffer_container.isEmpty())  {
+            Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
+            startActivity(buffer);
+        }
     }
 
     @Override

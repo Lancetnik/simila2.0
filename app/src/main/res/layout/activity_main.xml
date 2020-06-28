@@ -28,18 +28,21 @@
         </androidx.viewpager.widget.ViewPager>
 
         <ImageView
-            android:layout_marginTop="17dp"
+            android:layout_marginBottom="130dp"
+            android:layout_alignBottom="@id/viewPager"
             android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_height="75dp"
+            android:layout_width="75dp"
             android:src="@drawable/open_logo">
         </ImageView>
 
         <ImageView
             android:id="@+id/Img1Pager1"
 
-            android:layout_marginTop="155dp"
-            android:layout_marginLeft="60dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager"
+            android:layout_marginEnd="-87dp"
+            android:layout_toStartOf="@+id/Img2Pager1"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,8 +55,10 @@
         <ImageView
             android:id="@+id/Img2Pager1"
 
-            android:layout_marginTop="155dp"
-            android:layout_marginLeft="90dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager"
+            android:layout_marginEnd="-87dp"
+            android:layout_toStartOf="@+id/Img3Pager1"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,25 +68,27 @@
             android:src="@drawable/point"
             >
         </ImageView>
+
         <ImageView
             android:id="@+id/Img3Pager1"
 
-            android:layout_marginTop="155dp"
-            android:layout_marginLeft="120dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager"
+            android:layout_marginEnd="-87dp"
+            android:layout_toStartOf="@+id/Img4Pager1"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleX="0.6"
             android:scaleY="0.6"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
+            android:src="@drawable/point" />
         <ImageView
             android:id="@+id/Img4Pager1"
 
-            android:layout_marginTop="155dp"
-            android:layout_marginLeft="150dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager"
+            android:layout_centerHorizontal="true"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,8 +101,10 @@
         <ImageView
             android:id="@+id/Img5Pager1"
 
-            android:layout_marginTop="155dp"
-            android:layout_marginLeft="180dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager"
+            android:layout_marginStart="-87dp"
+            android:layout_toEndOf="@+id/Img4Pager1"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,8 +117,10 @@
         <ImageView
             android:id="@+id/Img6Pager1"
 
-            android:layout_marginTop="155dp"
-            android:layout_marginLeft="210dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager"
+            android:layout_marginStart="-87dp"
+            android:layout_toEndOf="@+id/Img5Pager1"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,8 +133,10 @@
         <ImageView
             android:id="@+id/Img7Pager1"
 
-            android:layout_marginTop="155dp"
-            android:layout_marginLeft="240dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager"
+            android:layout_marginStart="-87dp"
+            android:layout_toEndOf="@+id/Img6Pager1"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -146,18 +159,21 @@
         </androidx.viewpager.widget.ViewPager>
 
         <ImageView
-            android:layout_marginTop="217dp"
+            android:layout_marginBottom="130dp"
+            android:layout_alignBottom="@id/viewPager2"
             android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_height="75dp"
+            android:layout_width="75dp"
             android:src="@drawable/send_logo">
         </ImageView>
 
         <ImageView
             android:id="@+id/Img1Pager2"
 
-            android:layout_marginTop="355dp"
-            android:layout_marginLeft="60dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager2"
+            android:layout_marginEnd="-87dp"
+            android:layout_toStartOf="@+id/Img2Pager2"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -170,8 +186,10 @@
         <ImageView
             android:id="@+id/Img2Pager2"
 
-            android:layout_marginTop="355dp"
-            android:layout_marginLeft="90dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager2"
+            android:layout_marginEnd="-87dp"
+            android:layout_toStartOf="@+id/Img3Pager2"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -184,8 +202,10 @@
         <ImageView
             android:id="@+id/Img3Pager2"
 
-            android:layout_marginTop="355dp"
-            android:layout_marginLeft="120dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager2"
+            android:layout_marginEnd="-87dp"
+            android:layout_toStartOf="@+id/Img4Pager2"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -198,8 +218,9 @@
         <ImageView
             android:id="@+id/Img4Pager2"
 
-            android:layout_marginTop="355dp"
-            android:layout_marginLeft="150dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager2"
+            android:layout_centerHorizontal="true"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -212,8 +233,10 @@
         <ImageView
             android:id="@+id/Img5Pager2"
 
-            android:layout_marginTop="355dp"
-            android:layout_marginLeft="180dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager2"
+            android:layout_marginStart="-87dp"
+            android:layout_toEndOf="@+id/Img4Pager2"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -226,8 +249,10 @@
         <ImageView
             android:id="@+id/Img6Pager2"
 
-            android:layout_marginTop="355dp"
-            android:layout_marginLeft="210dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager2"
+            android:layout_marginStart="-87dp"
+            android:layout_toEndOf="@+id/Img5Pager2"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -240,8 +265,10 @@
         <ImageView
             android:id="@+id/Img7Pager2"
 
-            android:layout_marginTop="355dp"
-            android:layout_marginLeft="240dp"
+            android:layout_marginTop="105dp"
+            android:layout_alignTop="@+id/viewPager2"
+            android:layout_marginStart="-87dp"
+            android:layout_toEndOf="@+id/Img6Pager2"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
