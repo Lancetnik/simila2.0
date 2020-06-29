@@ -22,7 +22,7 @@
             android:overScrollMode="always"
             android:clipToPadding="false"
             android:layout_width="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="60dp"
             tools:context=".MainActivity"
             android:layout_height="200dp">
         </androidx.viewpager.widget.ViewPager>
@@ -68,7 +68,6 @@
             android:src="@drawable/point"
             >
         </ImageView>
-
         <ImageView
             android:id="@+id/Img3Pager1"
 
@@ -82,7 +81,9 @@
             android:scaleX="0.6"
             android:scaleY="0.6"
 
-            android:src="@drawable/point" />
+            android:src="@drawable/point"
+            >
+        </ImageView>
         <ImageView
             android:id="@+id/Img4Pager1"
 
@@ -152,7 +153,7 @@
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_centerInParent="false"
-            android:layout_marginTop="250dp"
+            android:layout_marginTop="260dp"
             android:clipToPadding="false"
             android:foregroundGravity="top"
             android:overScrollMode="always">

@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -15,8 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -24,7 +20,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,17 +37,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView nav_view;
 
     // для сохранения
-    private SharedPreferences sPref;
-    Integer open_state = 2;
-    Integer send_state = 2;
-    ArrayDeque<String> history = new ArrayDeque<String>();
-    // определяет размер истории, менять тут
-    Integer history_size = 20;
+    private static SharedPreferences sPref;
+    private static Integer open_state = 2;
+    private static Integer send_state = 2;
 
     // буфер
     CheckBox buffer;
-    Boolean Is_Buffer = false;
+    private static Boolean Is_Buffer = false; // используется ли буфер для сохранения?
     public static ArrayList <String> buffer_container = new ArrayList<>();
+    int buffer_response; // 2 - свернуть BufferActivity
 
     String[] Track;
 
@@ -67,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // получаем интент, вызвавший нас
         final Intent intent = getIntent();
         String url = intent.getDataString();
+
+        // ловим интент из буфера
+        buffer_response = intent.getIntExtra("clear",3);
 
         // отправляем ссылку самому себе, чтобы открыть в другом приложении
         if (intent.getClipData()!=null && String.valueOf(intent.getClipData()).contains("Simila")){
@@ -97,12 +93,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 // получить данные о треке и генерируем новый юрл
                 make_artist(url1);
+
+                // если ссылка из шазама, то открываем ее в своем приложении по умолчанию
+                if (url1.contains("shazam")) {
+                    String newURL = make_url(open_state);
+                    useUrl();
+                }
+
                 String newURL = make_url(send_state);
-                add_in_history("отправлено", Track[0], Track[1]);
 
                 // сохраняем в буфер, если он выбран
                 if(Is_Buffer) {
                     buffer_container.add(newURL);
+                    save();
                     this.finish();
                 }
 
@@ -122,12 +125,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // открываем основное окно
                         setContentView(R.layout.activity_main);
 
-                        // буфер
+                        // буфер чекбокс
                         buffer = findViewById(R.id.IS_BUFFER);
                         buffer.setChecked(Is_Buffer);
                         buffer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                 Is_Buffer = isChecked;
+                                save();
                             }
                         });
 
@@ -185,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onPageSelected(int position) {
                                 open_state = position % models.size();
                                 point_it(open_state, 1);
+                                save();
                             }
 
                             @Override
@@ -200,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onPageSelected(int position) {
                                 send_state = position % models.size();
                                 point_it(send_state, 2);
+                                save();
                             }
 
                             @Override
@@ -208,25 +214,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         });
 
                         // открываем буфер
-                        if (!buffer_container.isEmpty())  {
+                        if ((!buffer_container.isEmpty()) && (buffer_response != 2))  {
                             Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
                             startActivity(buffer);
                         }
                 }
-
                 // открываем полученные ссылки
                 else {
                     // получить данные о треке
                     make_artist(url);
-                    add_in_history("получено", Track[0], Track[1]);
                     // выполнить новую ссылку
                     useUrl();
                 }
             }
         }
-
-        // сохранение истории и выбранных параметров
-        save();
     }
 
     // Функция: открываем новый url способом по умолчанию
@@ -346,21 +347,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // загрузка сохраненного выбора в локальный файл
     public void load() {
+        buffer_container.clear();
         open_state = sPref.getInt("open_state", 2);
         send_state = sPref.getInt("send_state", 2);
-
-        // загружаем историю
-        if (sPref.contains("str")) {
-            String str = sPref.getString("str","");
-            String buf = "";
-            for (int i = 0; i < str.length(); i++ ) {
-                buf = buf + str.charAt(i);
-                if (str.charAt(i) == '\n') {
-                    history.add(buf);
-                    buf = "";
-                }
-            }
-        }
 
         // загружаем буфер
         if (sPref.contains("buffer_container")) {
@@ -383,50 +372,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // сохранение выбора для дальнейшего открытия через него по умолчанию
-    public void save() {
+    public static void save() {
         SharedPreferences.Editor ed = sPref.edit();
-
-        String historyset = "";
-        for(String pq : history) {
-            historyset += pq;
-        }
 
         // при закрытии сохраняем значение буфера
         if(Is_Buffer) ed.putBoolean("buf_state", true);
         else ed.putBoolean("buf_state", false);
 
         String bufferset = "";
-        for(int i = 0; i < buffer_container.size(); i++){
+        for(int i = 0; i < buffer_container.size(); i++) {
             bufferset += buffer_container.get(i);
             bufferset += '|';
         }
 
         ed.putString("buffer_container", bufferset);
-        ed.putString("str", historyset);
         ed.putInt("open_state", open_state);
         ed.putInt("send_state", send_state);
         ed.apply();
     }
 
-    public void  add_in_history (String what_is_it, String artist_name, String song_name) {
-        history.addLast(what_is_it + " " + artist_name + " " + song_name + "\n");
-        if (history.size() > history_size)
-            history.removeFirst();
-    }
-
-    @Override
-    // при остановке приложения сохраняем выбор
-    protected void onStop() {
-        super.onStop();
-        save();
-    }
-
     @Override
     // если мы передали ссылку в буфер, когда приложение было свернуто
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
+        load();
         // открываем буфер
-        if (!buffer_container.isEmpty())  {
+        if ((!buffer_container.isEmpty()) && (buffer_response != 2))  {
             Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
             startActivity(buffer);
         }
