@@ -289,6 +289,19 @@
             android:textColor="@color/Light"
             android:text="Buffer to send" />
 
+        <Button
+            android:id="@+id/buffer_button"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/IS_BUFFER"
+
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="157dp"
+            android:layout_centerInParent="true"
+            android:text="Back to buffer"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

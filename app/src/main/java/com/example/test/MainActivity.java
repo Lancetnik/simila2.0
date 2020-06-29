@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     CheckBox buffer;
     private static Boolean Is_Buffer = false; // используется ли буфер для сохранения?
     public static ArrayList <String> buffer_container = new ArrayList<>();
+    Button Back_to_buffer; // кнопка возврата к буферу, если мы его свернули
     int buffer_response; // 2 - свернуть BufferActivity
 
     String[] Track;
@@ -213,11 +216,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
 
+                        // кнопка "вернуться к буферу"
+                        Back_to_buffer = findViewById(R.id.buffer_button);
+                        View.OnClickListener buffer_button_listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
+                                Back_to_buffer.setVisibility(View.GONE);
+                                startActivity(buffer);
+                            }
+                        };
+                        Back_to_buffer.setOnClickListener(buffer_button_listener);
+
                         // открываем буфер
                         if ((!buffer_container.isEmpty()) && (buffer_response != 2))  {
                             Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
                             startActivity(buffer);
                         }
+                        // если буфер сворачивали
+                        if (buffer_response == 2 && (!buffer_container.isEmpty())) Back_to_buffer.setVisibility(View.VISIBLE);
                 }
                 // открываем полученные ссылки
                 else {
@@ -397,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onRestart();
         load();
         // открываем буфер
-        if ((!buffer_container.isEmpty()) && (buffer_response != 2))  {
+        if ((!buffer_container.isEmpty()))  {
             Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
             startActivity(buffer);
         }
