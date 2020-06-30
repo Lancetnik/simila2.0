@@ -394,10 +394,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 buf = buf + str.charAt(i);
             }
-
-            for (int j =0 ; j< buffer_container.size();j++){
-                Log.w("check", "rez: "+buffer_container.get(j));
-            }
         }
 
         // загружаем значение чекбокса
@@ -419,8 +415,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bufferset += buffer_container.get(i);
             bufferset += '|';
         }
-
-        Log.w("check","save: "+bufferset);
 
         ed.putString("buffer_container", bufferset);
         ed.putInt("open_state", open_state);

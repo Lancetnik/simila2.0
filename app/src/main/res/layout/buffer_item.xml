@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+
     android:background="@layout/border">
 
     <TextView
         android:id="@+id/buffer_item_track"
 
         android:paddingTop="10dp"
-        android:paddingRight="80dp"
 
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
 
@@ -22,15 +22,51 @@
 
     <TextView
         android:id="@+id/buffer_item_autor"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
 
         android:layout_below="@+id/buffer_item_track"
-        android:paddingRight="80dp"
         android:paddingBottom="10dp"
 
         android:textColor="@color/Light"
         android:fontFamily="monospace"
         android:textSize="12sp" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_toRightOf="@id/buffer_item_track">
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/del_button"
+
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+
+            android:layout_gravity="center_vertical"
+
+            android:contentDescription="Some text"
+            app:srcCompat="@drawable/delete_outline"
+            app:fabCustomSize="40dp"
+            app:backgroundTint="@color/Light"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/send_button"
+
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="43dp"
+
+            android:contentDescription="Some text"
+            app:srcCompat="@drawable/share"
+            app:fabCustomSize="40dp"
+            app:backgroundTint="@color/Primary"
+            />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class BufferActivity extends AppCompatActivity {
@@ -29,6 +31,14 @@ public class BufferActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.buffer_layout);
+
+        // список
+        recyclerView = (RecyclerView) findViewById(R.id.list_view);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        mAdapter = new MyAdapter(MainActivity.buffer_container);
+        recyclerView.setAdapter(mAdapter);
 
         // кнопка "очистить"
         Clear_button = findViewById(R.id.Clear_button);
@@ -64,28 +74,15 @@ public class BufferActivity extends AppCompatActivity {
                     text_to_send += String.valueOf(count) +") " + UrlMaker.make_url(MainActivity.send_state,i.split(" - ")) + "\n";
                     count += 1;
                 }
-                MainActivity.buffer_container.clear();
-                MainActivity.save();
 
                 Intent intent2 = new Intent();
                 intent2.setAction(Intent.ACTION_SEND);
                 intent2.setType("text/plain");
                 intent2.putExtra(Intent.EXTRA_TEXT, text_to_send + " сгенерировано с помощью Simila");
                 startActivity(Intent.createChooser(intent2, "Share"));
-
-                BufferActivity.this.finish();
             }
         };
         Send_button.setOnClickListener(send_button_listener);
-
-        // список
-        recyclerView = (RecyclerView) findViewById(R.id.list_view);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-
-        mAdapter = new MyAdapter(MainActivity.buffer_container);
-        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -95,7 +92,6 @@ public class BufferActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-
         mAdapter = new MyAdapter(MainActivity.buffer_container);
         recyclerView.setAdapter(mAdapter);
     }
@@ -124,6 +120,30 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.BufferItemTrack.setText(mDataset.get(position).split(" - ")[1]);
         holder.BufferItemAutor.setText(mDataset.get(position).split(" - ")[0]);
+
+        holder.DelButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mDataset.remove(position);
+                MainActivity.save();
+                notifyItemRemoved(position);
+                notifyDataSetChanged();
+            }
+        });
+        holder.SendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] Track = new String[2];
+                Track[0] = holder.BufferItemAutor.getText().toString();
+                Track[1] = holder.BufferItemTrack.getText().toString();
+                String newUrl = UrlMaker.make_url(MainActivity.send_state,Track);
+
+                Intent intent2 = new Intent();
+                intent2.setAction(Intent.ACTION_SEND);
+                intent2.setType("text/plain");
+                intent2.putExtra(Intent.EXTRA_TEXT, newUrl + " сгенерировано с помощью Simila");
+                v.getContext().startActivity(Intent.createChooser(intent2, "Share"));
+            }
+        });
     }
 
     @Override
@@ -134,11 +154,15 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView BufferItemTrack;
         TextView BufferItemAutor;
+        FloatingActionButton DelButton;
+        FloatingActionButton SendButton;
 
         MyViewHolder(View itemView) {
             super(itemView);
             BufferItemTrack = itemView.findViewById(R.id.buffer_item_track);
             BufferItemAutor = itemView.findViewById(R.id.buffer_item_autor);
+            DelButton = itemView.findViewById(R.id.del_button);
+            SendButton = itemView.findViewById(R.id.send_button);
         }
     }
 }
