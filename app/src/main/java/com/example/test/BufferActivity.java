@@ -1,30 +1,37 @@
 package com.example.test;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
 public class BufferActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private Button Clear_button;
+    private Button Cut_button;
+    private Button Send_button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.buffer_layout);
 
         // кнопка "очистить"
-        Button Clear_button = findViewById(R.id.Clear_button);
+        Clear_button = findViewById(R.id.Clear_button);
         View.OnClickListener clear_button_listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,7 +43,7 @@ public class BufferActivity extends AppCompatActivity {
         Clear_button.setOnClickListener(clear_button_listener);
 
         // кнопка "свернуть"
-        Button Cut_button = findViewById(R.id.Cut_button);
+        Cut_button = findViewById(R.id.Cut_button);
         View.OnClickListener cut_button_listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,7 +53,7 @@ public class BufferActivity extends AppCompatActivity {
         Cut_button.setOnClickListener(cut_button_listener);
 
         // кнопка отправки
-        Button Send_button = findViewById(R.id.Send_button);
+        Send_button = findViewById(R.id.Send_button);
         View.OnClickListener send_button_listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +61,7 @@ public class BufferActivity extends AppCompatActivity {
                 int count = 1;
                 assert MainActivity.buffer_container != null;
                 for (String i : MainActivity.buffer_container) {
-                    text_to_send += String.valueOf(count) +") " + i + "\n";
+                    text_to_send += String.valueOf(count) +") " + UrlMaker.make_url(MainActivity.send_state,i.split(" - ")) + "\n";
                     count += 1;
                 }
                 MainActivity.buffer_container.clear();
@@ -72,9 +79,68 @@ public class BufferActivity extends AppCompatActivity {
         Send_button.setOnClickListener(send_button_listener);
 
         // список
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_view);
+        recyclerView = (RecyclerView) findViewById(R.id.list_view);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+
+        mAdapter = new MyAdapter(MainActivity.buffer_container);
+        recyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        recyclerView = (RecyclerView) findViewById(R.id.list_view);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+
+        mAdapter = new MyAdapter(MainActivity.buffer_container);
+        recyclerView.setAdapter(mAdapter);
     }
 }
 
+class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    private ArrayList<String> mDataset;
+
+    MyAdapter(ArrayList<String> myDataset) {
+        mDataset = myDataset;
+    }
+
+    @Override
+    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        int layoutIdForListItem = R.layout.buffer_item;
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
+
+        MyViewHolder viewHolder = new MyViewHolder(view);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        holder.BufferItemTrack.setText(mDataset.get(position).split(" - ")[1]);
+        holder.BufferItemAutor.setText(mDataset.get(position).split(" - ")[0]);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mDataset.size();
+    }
+
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView BufferItemTrack;
+        TextView BufferItemAutor;
+
+        MyViewHolder(View itemView) {
+            super(itemView);
+            BufferItemTrack = itemView.findViewById(R.id.buffer_item_track);
+            BufferItemAutor = itemView.findViewById(R.id.buffer_item_autor);
+        }
+    }
+}
 
 

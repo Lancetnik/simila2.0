@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import androidx.viewpager.widget.PagerAdapter;
 
-
 import java.util.List;
 
 public class Adapter extends PagerAdapter {
@@ -18,7 +17,7 @@ public class Adapter extends PagerAdapter {
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public Adapter(List<Model> models, Context context) {
+    Adapter(List<Model> models, Context context) {
         this.models = models;
         this.context = context;
     }
@@ -33,7 +32,6 @@ public class Adapter extends PagerAdapter {
     public boolean isViewFromObject( View view,  Object object) {
         return view.equals(object);
     }
-
 
     @Override
     public Object instantiateItem( ViewGroup container, final int position) {

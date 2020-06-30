@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // для сохранения
     private static SharedPreferences sPref;
     private static Integer open_state = 2;
-    private static Integer send_state = 2;
+    public static Integer send_state = 2;
 
     // буфер
     CheckBox buffer;
     private static Boolean Is_Buffer = false; // используется ли буфер для сохранения?
-    public static ArrayList <String> buffer_container = new ArrayList<>();
+    public static ArrayList <String> buffer_container = new ArrayList<>(); // храним треки в виде автор - песня
     Button Back_to_buffer; // кнопка возврата к буферу, если мы его свернули
     int buffer_response; // 2 - свернуть BufferActivity
 
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 // сохраняем в буфер, если он выбран
                 if(Is_Buffer) {
-                    buffer_container.add(newURL);
+                    buffer_container.add(Track[0]+" - "+Track[1]);
                     save();
                     this.finish();
                 }
@@ -365,13 +365,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // загрузка сохраненного выбора в локальный файл
     public void load() {
         buffer_container.clear();
+
         open_state = sPref.getInt("open_state", 2);
         send_state = sPref.getInt("send_state", 2);
 
         // загружаем буфер
+        String buf = "";
         if (sPref.contains("buffer_container")) {
             String str = sPref.getString("buffer_container","");
-            String buf = "";
             for (int i = 0; i < str.length(); i++ ) {
                 if (str.charAt(i) == '|') {
                     buffer_container.add(buf);
@@ -379,6 +380,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if ( i != str.length()-1) i+= 1;
                 }
                 buf = buf + str.charAt(i);
+            }
+
+            for (int j =0 ; j< buffer_container.size();j++){
+                Log.w("check", "rez: "+buffer_container.get(j));
             }
         }
 
@@ -401,6 +406,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bufferset += buffer_container.get(i);
             bufferset += '|';
         }
+
+        Log.w("check","save: "+bufferset);
 
         ed.putString("buffer_container", bufferset);
         ed.putInt("open_state", open_state);
