@@ -10,15 +10,15 @@
     <TextView
         android:id="@+id/buffer_item_track"
 
-        android:paddingTop="10dp"
-
         android:layout_width="300dp"
+
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
+        android:fontFamily="@font/aldrich"
 
+        android:paddingTop="10dp"
         android:textColor="@color/Primary"
-        android:fontFamily="monospace"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/buffer_item_autor"
@@ -26,10 +26,10 @@
         android:layout_height="wrap_content"
 
         android:layout_below="@+id/buffer_item_track"
-        android:paddingBottom="10dp"
+        android:fontFamily="@font/abril_fatface"
 
+        android:paddingBottom="10dp"
         android:textColor="@color/Light"
-        android:fontFamily="monospace"
         android:textSize="12sp" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -46,7 +46,7 @@
 
             android:layout_gravity="center_vertical"
 
-            android:contentDescription="Some text"
+
             app:srcCompat="@drawable/delete_outline"
             app:fabCustomSize="40dp"
             app:backgroundTint="@color/Light"
@@ -61,10 +61,9 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="43dp"
 
-            android:contentDescription="Some text"
             app:srcCompat="@drawable/share"
             app:fabCustomSize="40dp"
-            app:backgroundTint="@color/Primary"
+            app:backgroundTint="@color/Light"
             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

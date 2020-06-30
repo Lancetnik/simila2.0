@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Simila</string>
     <string name="tutorial">Tutorial</string>
-
-    <string name="scale_nav">2</string>
 </resources>

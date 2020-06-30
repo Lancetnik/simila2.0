@@ -309,12 +309,24 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@color/Primary">
+                android:background="@color/Primary"
+                app:title=" "
+                >
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/abril_fatface"
+
+                    android:text="@string/app_name"
+                    android:textSize="26dp"
+                    android:textColor="#333">
+                </TextView>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -323,11 +335,20 @@
     <com.google.android.material.navigation.NavigationView
         app:menu="@menu/menu"
         android:id="@+id/nav_view"
-
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        >
+
+        android:background="@color/font"
+        app:itemTextColor="@color/Light">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/Primary"
+            app:title=" ">
+        </androidx.appcompat.widget.Toolbar>
+
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

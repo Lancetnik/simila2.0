@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/tutorial"/>
+    <item android:title="not visible" /> <!--Not touch-->
+
+    <item android:id="@+id/tit1"
+        android:title="Title1"/>
 
 </menu>
