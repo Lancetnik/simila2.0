@@ -15,6 +15,7 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+        <!--Первый слайдер-->
         <androidx.viewpager.widget.ViewPager
             android:foregroundGravity="top"
             android:id="@+id/viewPager"
@@ -27,6 +28,7 @@
             android:layout_height="200dp">
         </androidx.viewpager.widget.ViewPager>
 
+        <!--Иконка принятия-->
         <ImageView
             android:layout_marginBottom="130dp"
             android:layout_alignBottom="@id/viewPager"
@@ -36,118 +38,115 @@
             android:src="@drawable/open_logo">
         </ImageView>
 
-        <ImageView
-            android:id="@+id/Img1Pager1"
-
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager"
-            android:layout_marginEnd="-87dp"
-            android:layout_toStartOf="@+id/Img2Pager1"
-
-            android:layout_width="wrap_content"
+        <!--Навигация по первому слайдеру-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+            android:layout_below="@id/viewPager"
+            android:orientation="horizontal"
+            android:layout_marginTop="-95dp"
+            android:paddingHorizontal="80dp">
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img2Pager1"
+            <ImageView
+                android:id="@+id/Img1Pager1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager"
-            android:layout_marginEnd="-87dp"
-            android:layout_toStartOf="@+id/Img3Pager1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img2Pager1"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img3Pager1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager"
-            android:layout_marginEnd="-87dp"
-            android:layout_toStartOf="@+id/Img4Pager1"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img3Pager1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img4Pager1"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img4Pager1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager"
-            android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img5Pager1"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img5Pager1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager"
-            android:layout_marginStart="-87dp"
-            android:layout_toEndOf="@+id/Img4Pager1"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img6Pager1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img6Pager1"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img7Pager1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager"
-            android:layout_marginStart="-87dp"
-            android:layout_toEndOf="@+id/Img5Pager1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img8Pager1"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img7Pager1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager"
-            android:layout_marginStart="-87dp"
-            android:layout_toEndOf="@+id/Img6Pager1"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+        </LinearLayout>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-
+        <!--Второй слайдер-->
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager2"
             android:layout_width="wrap_content"
@@ -159,6 +158,7 @@
             android:overScrollMode="always">
         </androidx.viewpager.widget.ViewPager>
 
+       <!--Логотип отправки-->
         <ImageView
             android:layout_marginBottom="130dp"
             android:layout_alignBottom="@id/viewPager2"
@@ -168,118 +168,114 @@
             android:src="@drawable/send_logo">
         </ImageView>
 
-        <ImageView
-            android:id="@+id/Img1Pager2"
-
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager2"
-            android:layout_marginEnd="-87dp"
-            android:layout_toStartOf="@+id/Img2Pager2"
-
-            android:layout_width="wrap_content"
+        <!--Навигация по второму слайдеру-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+            android:layout_below="@id/viewPager2"
+            android:orientation="horizontal"
+            android:layout_marginTop="-95dp"
+            android:paddingHorizontal="80dp">
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img2Pager2"
+            <ImageView
+                android:id="@+id/Img1Pager2"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager2"
-            android:layout_marginEnd="-87dp"
-            android:layout_toStartOf="@+id/Img3Pager2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img2Pager2"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img3Pager2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager2"
-            android:layout_marginEnd="-87dp"
-            android:layout_toStartOf="@+id/Img4Pager2"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img3Pager2"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img4Pager2"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img4Pager2"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager2"
-            android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img5Pager2"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img5Pager2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager2"
-            android:layout_marginStart="-87dp"
-            android:layout_toEndOf="@+id/Img4Pager2"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img6Pager2"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img6Pager2"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img7Pager2"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager2"
-            android:layout_marginStart="-87dp"
-            android:layout_toEndOf="@+id/Img5Pager2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+            <ImageView
+                android:id="@+id/Img8Pager2"
 
-            android:src="@drawable/point"
-            >
-        </ImageView>
-        <ImageView
-            android:id="@+id/Img7Pager2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:layout_weight="1"
 
-            android:layout_marginTop="105dp"
-            android:layout_alignTop="@+id/viewPager2"
-            android:layout_marginStart="-87dp"
-            android:layout_toEndOf="@+id/Img6Pager2"
+                android:src="@drawable/point"
+                >
+            </ImageView>
+        </LinearLayout>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
-
-            android:src="@drawable/point"
-            >
-        </ImageView>
-
+        <!--Чекбокс для буфера-->
         <CheckBox
             android:id="@+id/IS_BUFFER"
             android:layout_marginTop="450dp"
@@ -289,6 +285,7 @@
             android:textColor="@color/Light"
             android:text="Buffer to send" />
 
+        <!--Кнопка "вернуться в буфер"-->
         <Button
             android:id="@+id/buffer_button"
 
@@ -304,6 +301,7 @@
 
     </RelativeLayout>
 
+    <!--Панель бар сверху-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -321,6 +319,7 @@
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <!--Выпадающее меню, описывается в @menu/menu-->
     <com.google.android.material.navigation.NavigationView
         app:menu="@menu/menu"
         android:id="@+id/nav_view"

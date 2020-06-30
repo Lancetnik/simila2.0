@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         models.add(new Model(R.drawable.deezer));
                         models.add(new Model(R.drawable.google));
                         models.add(new Model(R.drawable.apple));
+                        models.add(new Model(R.drawable.youtube_music));
 
                         adapter = new Adapter(models, this);
 
@@ -283,6 +284,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             sixth.setImageResource(R.drawable.point);
             ImageView seventh = findViewById(R.id.Img7Pager1);
             seventh.setImageResource(R.drawable.point);
+            ImageView eight = findViewById(R.id.Img8Pager1);
+            eight.setImageResource(R.drawable.point);
             switch (number) {
                 case 1: {
                     first.setImageResource(R.drawable.active_point);
@@ -312,6 +315,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     seventh.setImageResource(R.drawable.active_point);
                     break;
                 }
+                case 8: {
+                    eight.setImageResource(R.drawable.active_point);
+                    break;
+                }
             }
         }
         if (pager == 2) {
@@ -329,6 +336,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 sixth.setImageResource(R.drawable.point);
                 ImageView seventh = findViewById(R.id.Img7Pager2);
                 seventh.setImageResource(R.drawable.point);
+                ImageView eight = findViewById(R.id.Img8Pager2);
+                eight.setImageResource(R.drawable.point);
                 switch (number) {
                     case 1: {
                         first.setImageResource(R.drawable.active_point);
@@ -356,6 +365,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     case 7: {
                         seventh.setImageResource(R.drawable.active_point);
+                        break;
+                    }
+                    case 8: {
+                        eight.setImageResource(R.drawable.active_point);
                         break;
                     }
                 }
