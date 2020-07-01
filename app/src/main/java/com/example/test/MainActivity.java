@@ -3,7 +3,10 @@ package com.example.test;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -14,12 +17,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -27,28 +33,35 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    // буфер снизу
+    private ConstraintLayout buffer_sheet;
+    public static BottomSheetBehavior bottom_sheet_behavior;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    public static FloatingActionButton Clear_button;
+    public static FloatingActionButton Send_button;
+    public static Chip chip_buffer;
+    public static TextView buf_title;
+    private static Boolean Is_Buffer = false; // используется ли буфер для сохранения?
+    public static ArrayList <String> buffer_container = new ArrayList<>();// храним треки в виде автор - песня
+
     // скроллеры
-    ViewPager viewPager;
-    ViewPager viewPager2;
-    Adapter adapter;
-    ArrayList<Model> models = new ArrayList<>();
+    private ViewPager viewPager;
+    private ViewPager viewPager2;
+    private Adapter adapter;
+    private ArrayList<Model> models = new ArrayList<>();
 
     // выпадающее меню
-    Toolbar toolbar;
-    DrawerLayout drawerLayout;
-    NavigationView nav_view;
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView nav_view;
 
     // для сохранения
     private static SharedPreferences sPref;
     private static Integer open_state = 2;
     public static Integer send_state = 2;
-
-    // буфер
-    CheckBox buffer;
-    private static Boolean Is_Buffer = false; // используется ли буфер для сохранения?
-    public static ArrayList <String> buffer_container = new ArrayList<>(); // храним треки в виде автор - песня
-    Button Back_to_buffer; // кнопка возврата к буферу, если мы его свернули
-    int buffer_response; // 2 - свернуть BufferActivity
 
     String[] Track;
 
@@ -64,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Intent intent = getIntent();
         String url = intent.getDataString();
 
-        // ловим интент из буфера
-        buffer_response = intent.getIntExtra("clear",3);
 
         // отправляем ссылку самому себе, чтобы открыть в другом приложении
         if (intent.getClipData()!=null && String.valueOf(intent.getClipData()).contains("Simila")){
@@ -128,17 +139,106 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // открываем основное окно
                         setContentView(R.layout.activity_main);
 
-                        // буфер чекбокс
-                        buffer = findViewById(R.id.IS_BUFFER);
-                        buffer.setChecked(Is_Buffer);
-                        buffer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                Is_Buffer = isChecked;
-                                save();
+                        // буфер
+                    {
+                        // нижняя панель
+                        {
+                            buffer_sheet = findViewById(R.id.buffer_sheet);
+                            Clear_button = findViewById(R.id.Clear_button);
+                            Send_button = findViewById(R.id.Send_button);
+                            buf_title = findViewById(R.id.title);
+                            chip_buffer = (Chip) findViewById(R.id.chip_buffer);
+                            recyclerView = (RecyclerView) findViewById(R.id.list_view);
+
+                            bottom_sheet_behavior = BottomSheetBehavior.from(buffer_sheet);
+                            bottom_sheet_behavior.setHideable(false);
+                            bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            if (buffer_container.isEmpty()) {
+                                buf_title.setText("Buffer is empty");
+                                Clear_button.setVisibility(View.GONE);
+                                Send_button.setVisibility(View.GONE);
                             }
-                        });
+                            else {
+                                buf_title.setText("Buffer");
+                                chip_buffer.setVisibility(View.GONE);
+                            }
+                        }
+
+                        // буфер чекбокс
+                        {
+                            chip_buffer.setChecked(Is_Buffer);
+                            if (Is_Buffer) chip_buffer.setText("Is Using");
+                            else chip_buffer.setText("Use It");
+
+                            chip_buffer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                                    Is_Buffer = isChecked;
+                                    save();
+                                    if (isChecked) chip_buffer.setText("Is Using");
+                                    else chip_buffer.setText("Use It");
+                                }
+                            });
+                        }
+
+                        // список
+                        {
+                            layoutManager = new LinearLayoutManager(this);
+                            recyclerView.setLayoutManager(layoutManager);
+                            recyclerView.setHasFixedSize(true);
+                            mAdapter = new MyAdapter(buffer_container);
+                            recyclerView.setAdapter(mAdapter);
+                        }
+
+                        // кнопка "очистить"
+                        {
+                            View.OnClickListener clear_button_listener = new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    buffer_container.clear();
+                                    save();
+                                    mAdapter.notifyDataSetChanged();
+                                    bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                    buf_title.setText("Buffer is empty");
+                                    Clear_button.setVisibility(View.GONE);
+                                    Send_button.setVisibility(View.GONE);
+                                    chip_buffer.setVisibility(View.VISIBLE);
+                                }
+                            };
+                            Clear_button.setOnClickListener(clear_button_listener);
+                        }
+
+                        // кнопка отправки
+                        {
+                            View.OnClickListener send_button_listener = new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (!buffer_container.isEmpty())
+                                    {
+                                        String text_to_send = "";
+                                        int count = 1;
+                                        assert buffer_container != null;
+                                        for (String i : buffer_container) {
+                                            text_to_send += String.valueOf(count) + ") " + UrlMaker.make_url(send_state, i.split(" - ")) + "\n";
+                                            count += 1;
+                                        }
+
+                                        Intent intent2 = new Intent();
+                                        intent2.setAction(Intent.ACTION_SEND);
+                                        intent2.setType("text/plain");
+                                        intent2.putExtra(Intent.EXTRA_TEXT, text_to_send + " сгенерировано с помощью Simila");
+                                        startActivity(Intent.createChooser(intent2, "Share"));
+
+                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                    }
+                                }
+                            };
+                            Send_button.setOnClickListener(send_button_listener);
+                        }
+                    }
 
                         // выпадающее меню
+                    {
                         toolbar = findViewById(R.id.toolbar);
                         drawerLayout = findViewById(R.id.drawer_layout);
                         nav_view = findViewById(R.id.nav_view);
@@ -155,7 +255,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         drawerLayout.addDrawerListener(actionBarDrawerToggle);
                         actionBarDrawerToggle.syncState();
                         nav_view.setNavigationItemSelectedListener(this);
+                    }
 
+                        // скроллеры
+                    {
                         // заполняем список приложений для скроллеров
                         models.add(new Model(R.drawable.yandex));
                         models.add(new Model(R.drawable.vk));
@@ -216,26 +319,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onPageScrollStateChanged(int state) {
                             }
                         });
+                    }
 
-                        // кнопка "вернуться к буферу"
-                        Back_to_buffer = findViewById(R.id.buffer_button);
-                        View.OnClickListener buffer_button_listener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
-                                Back_to_buffer.setVisibility(View.GONE);
-                                startActivity(buffer);
-                            }
-                        };
-                        Back_to_buffer.setOnClickListener(buffer_button_listener);
-
-                        // открываем буфер
-                        if ((!buffer_container.isEmpty()) && (buffer_response != 2))  {
-                            Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
-                            startActivity(buffer);
-                        }
-                        // если буфер сворачивали
-                        if (buffer_response == 2 && (!buffer_container.isEmpty())) Back_to_buffer.setVisibility(View.VISIBLE);
                 }
                 // открываем полученные ссылки
                 else {
@@ -428,9 +513,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onRestart();
         load();
         // открываем буфер
-        if ((!buffer_container.isEmpty()))  {
-            Intent buffer = new Intent(MainActivity.this, BufferActivity.class);
-            startActivity(buffer);
+        mAdapter.notifyDataSetChanged();
+        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        if (buffer_container.isEmpty()) {
+            buf_title.setText("Buffer is empty");
+            Clear_button.setVisibility(View.GONE);
+            Send_button.setVisibility(View.GONE);
+            chip_buffer.setVisibility(View.VISIBLE);
+        }
+        else {
+            buf_title.setText("Buffer");
+            Clear_button.setVisibility(View.VISIBLE);
+            Send_button.setVisibility(View.VISIBLE);
+            chip_buffer.setVisibility(View.GONE);
         }
     }
 

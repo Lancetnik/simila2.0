@@ -48,9 +48,12 @@
 
 
             app:srcCompat="@drawable/delete_outline"
+            app:tint="@color/Light"
             app:fabCustomSize="40dp"
-            app:backgroundTint="@color/Light"
-            />
+            app:backgroundTint="@color/font"
+            app:borderWidth="0dp"
+            android:elevation="0dp"
+        />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/send_button"
@@ -62,8 +65,11 @@
             android:layout_marginLeft="43dp"
 
             app:srcCompat="@drawable/share"
+            app:tint="@color/Light"
             app:fabCustomSize="40dp"
-            app:backgroundTint="@color/Light"
+            app:backgroundTint="@color/font"
+            app:borderWidth="0dp"
+            android:elevation="0dp"
             />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

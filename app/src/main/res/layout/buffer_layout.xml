@@ -1,89 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/font">
+    android:layout_height="wrap_content"
+    android:minHeight="92dp"
+    android:background="@color/font"
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinatorLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:id="@+id/buffer_sheet"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:behavior_hideable="true"
+    app:behavior_skipCollapsed="true"
+    app:behavior_peekHeight="2dp"
+    android:layout_marginTop="42dp">
 
-            <androidx.appcompat.widget.Toolbar
+            <LinearLayout
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/Primary">
+                android:layout_height="50dp"
+                android:background="@layout/border_buffer_title">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/title"
+                    android:layout_width="300dp"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/abril_fatface"
 
+                    android:paddingLeft="20dp"
+                    android:textAlignment="viewStart"
+                    android:gravity="center"
                     android:text="Buffer"
                     android:textSize="26dp"
-                    android:textColor="#333">
-                </TextView>
-            </androidx.appcompat.widget.Toolbar>
+                    android:textColor="#333"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_buffer"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+
+                    android:textAlignment="center"
+                    android:fontFamily="@font/aldrich"
+                    app:chipBackgroundColor="@drawable/chip_selector"
+                    android:textColor="@drawable/text_chep_selector"
+                    android:text="Use It"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/Clear_button"
+
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
+
+                    android:layout_gravity="center_vertical"
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_view"
-            android:layout_width="match_parent"
-            android:layout_height="670dp"
-            android:layout_marginTop="40dp" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    app:tint="@color/font"
+                    app:fabCustomSize="40dp"
+                    app:backgroundTint="@color/Primary"
+                    app:borderWidth="0dp"
+                    android:elevation="0dp"
+                    app:srcCompat="@drawable/delete_outline" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/Send_button"
+
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="3dp"
+
+                    android:layout_gravity="center_vertical|right"
+
+                    app:srcCompat="@drawable/share"
+                    app:tint="@color/font"
+                    app:fabCustomSize="40dp"
+                    app:backgroundTint="@color/Primary"
+                    app:borderWidth="0dp"
+                    android:elevation="0dp"
+                    />
+
+
+            </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:paddingBottom="45dp"/>
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/Cut_button"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="center"
-            android:layout_margin="16dp"
-            app:backgroundTint="@color/Light"
-
-            android:text="CUT"
-            android:textSize="22dp"
-            android:textAlignment="center"
-            app:cornerRadius="2dp"
-            />
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/Send_button"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginLeft="20dp"
-            app:backgroundTint="@color/Light"
-
-            android:text="Send"
-            android:textAlignment="center"
-            />
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/Clear_button"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="right|center_vertical"
-            app:backgroundTint="@color/Light"
-            android:layout_marginRight="20dp"
-
-            android:text="Clear"
-
-            android:textAlignment="center"
-            />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

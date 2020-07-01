@@ -213,18 +213,17 @@
                 android:src="@drawable/point"
                 >
             </ImageView>
+
             <ImageView
                 android:id="@+id/Img4Pager2"
 
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:scaleX="2"
                 android:scaleY="2"
-                android:layout_weight="1"
 
-                android:src="@drawable/point"
-                >
-            </ImageView>
+                android:src="@drawable/point"></ImageView>
             <ImageView
                 android:id="@+id/Img5Pager2"
 
@@ -274,38 +273,13 @@
                 >
             </ImageView>
         </LinearLayout>
-
-        <!--Чекбокс для буфера-->
-        <CheckBox
-            android:id="@+id/IS_BUFFER"
-            android:layout_marginTop="450dp"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/Light"
-            android:text="Buffer to send" />
-
-        <!--Кнопка "вернуться в буфер"-->
-        <Button
-            android:id="@+id/buffer_button"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/IS_BUFFER"
-
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="157dp"
-            android:layout_centerInParent="true"
-            android:text="Back to buffer"
-            android:visibility="gone"/>
-
     </RelativeLayout>
 
-    <!--Панель бар сверху-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--Панель бар сверху-->
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -329,6 +303,10 @@
                 </TextView>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
+
+        <!-- Bottom sheet -->
+        <include layout="@layout/buffer_layout"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!--Выпадающее меню, описывается в @menu/menu-->
