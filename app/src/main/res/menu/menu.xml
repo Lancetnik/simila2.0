@@ -1,9 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:title="not visible" /> <!--Not touch-->
 
-    <item android:id="@+id/tit1"
-        android:title="Title1"/>
+   <!--tutorials-->
+        <item app:actionLayout="@menu/tutorial_title"
+            android:title=""
+            app:showAsAction="always"/>
+
+        <item android:id="@+id/tutorial_open"
+            app:actionLayout="@menu/open"
+            android:title=" "/>
+        <item android:id="@+id/tutorial_send"
+            app:actionLayout="@menu/send"
+            android:title=" " />
+        <item android:id="@+id/tutorial_buffer"
+            app:actionLayout="@menu/buffer"
+            android:title=" " />
+        <item android:id="@+id/tutorial_reopen"
+            app:actionLayout="@menu/new_app"
+            android:title=" " />
+
+
+    <!--settings-->
+    <group android:id="@+id/settings">
+        <item app:actionLayout="@menu/settings_title"
+            android:title=""
+            app:showAsAction="always"/>
+
+        <item android:id="@+id/special_shazam"
+            app:actionLayout="@menu/shazam_menu_item"
+            android:title=" "
+            app:showAsAction="always"/>
+        <item android:id="@+id/use_buffer"
+            app:actionLayout="@menu/buffer_menu_item"
+            android:title=" "
+            app:showAsAction="always"/>
+    </group>
+
+    <!--about app-->
+    <item app:actionLayout="@menu/more"
+        android:title=" " />
+    <item android:id="@+id/donate"
+        app:actionLayout="@menu/food"
+        android:title=" " />
+    <item android:id="@+id/addblock"
+        app:actionLayout="@menu/addblock"
+        android:title=" " />
+    <item android:id="@+id/rate"
+        app:actionLayout="@menu/rate"
+        android:title=" " />
 
 </menu>

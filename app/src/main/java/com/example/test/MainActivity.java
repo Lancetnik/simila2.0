@@ -27,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -58,10 +59,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView nav_view;
 
+    private SwitchMaterial buffer_switcher;
+    private SwitchMaterial shazam_switcher;
+    private FloatingActionButton buffer_help_button;
+    private FloatingActionButton shazam_help_button;
+
     // для сохранения
     private static SharedPreferences sPref;
-    private static Integer open_state = 2;
-    public static Integer send_state = 2;
+    private static Integer open_state = 2; // значение скроллера для открытия
+    public static Integer send_state = 2; // значение скроллера для закрытия
+    private static boolean is_first = true; // первый ли раз открыта программа
+    private static boolean is_bought = false; // куплена ли фулл версия
+    private static int add_counter; // счетчик для октрытия рекламы
+    private static boolean special_shazam = false; // отправлять ли ссылки из шазама сразу на открытие в своем сервисе
 
     String[] Track;
 
@@ -80,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // отправляем ссылку самому себе, чтобы открыть в другом приложении
         if (intent.getClipData()!=null && String.valueOf(intent.getClipData()).contains("Simila")){
+            try_add();
             // получаем URL из ссылки регуляркой
             String str = String.valueOf(intent.getClipData());
             Pattern p = Pattern.compile("http.*");
@@ -96,24 +107,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             // передача ссылки
             if (intent.getClipData() != null && url == null) {
+                try_add();
                 // получаем URL из ссылки регуляркой
                 String str = String.valueOf(intent.getClipData());
                 Pattern p = Pattern.compile("http.*");
                 Matcher m = p.matcher(str);
                 String url1 = "";
-                while (m.find()) {
+                while (m.find())
                     url1 = m.group().substring(0, (m.group().length() - 3));
-                }
+
+                // если ссылка из шазама, то открываем ее в своем приложении по умолчанию
+                if (url1.contains("shazam") && special_shazam) useUrl();
 
                 // получить данные о треке и генерируем новый юрл
                 make_artist(url1);
-
-                // если ссылка из шазама, то открываем ее в своем приложении по умолчанию
-                if (url1.contains("shazam")) {
-                    String newURL = make_url(open_state);
-                    useUrl();
-                }
-
                 String newURL = make_url(send_state);
 
                 // сохраняем в буфер, если он выбран
@@ -139,7 +146,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // открываем основное окно
                         setContentView(R.layout.activity_main);
 
-                        // буфер
+                        // обучалка при первом запуске
+                        if (is_first) {
+                            // tutorial start
+                            is_first = false;
+                            save();
+                        }
+
+                    // выпадающее меню
+                    {
+                        toolbar = findViewById(R.id.toolbar);
+                        drawerLayout = findViewById(R.id.drawer_layout);
+                        nav_view = findViewById(R.id.nav_view);
+                        buffer_switcher = nav_view.findViewById(R.id.buffer_menu_switcher);
+                        shazam_switcher = findViewById(R.id.shazam_menu_switcher);
+                        buffer_help_button = findViewById(R.id.buffer_help_button);
+                        shazam_help_button = findViewById(R.id.shazam_help_button);
+                        setSupportActionBar(toolbar);
+
+                        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                                this,
+                                drawerLayout,
+                                toolbar,
+                                R.string.tutorial,
+                                R.string.tutorial
+                        );
+
+                        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+                        actionBarDrawerToggle.syncState();
+                        nav_view.setNavigationItemSelectedListener(this);
+
+                        nav_view.getMenu().getItem(2).getSubMenu().getItem(1)
+
+                    }
+
+                    // буфер
                     {
                         // нижняя панель
                         {
@@ -162,6 +203,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 buf_title.setText("Buffer");
                                 chip_buffer.setVisibility(View.GONE);
                             }
+                            bottom_sheet_behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                                @Override
+                                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                                    if (buffer_container.isEmpty()) {
+                                        if (newState == BottomSheetBehavior.STATE_EXPANDED)
+                                            bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                    }
+                                }
+
+                                @Override
+                                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+                                }
+                            });
                         }
 
                         // буфер чекбокс
@@ -175,8 +230,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void onCheckedChanged(CompoundButton view, boolean isChecked) {
                                     Is_Buffer = isChecked;
                                     save();
-                                    if (isChecked) chip_buffer.setText("Is Using");
-                                    else chip_buffer.setText("Use It");
+                                    if (isChecked) {
+                                        chip_buffer.setText("Is Using");
+                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                    }
+                                    else {
+                                        chip_buffer.setText("Use It");
+                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                    }
                                 }
                             });
                         }
@@ -235,26 +296,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             };
                             Send_button.setOnClickListener(send_button_listener);
                         }
-                    }
-
-                        // выпадающее меню
-                    {
-                        toolbar = findViewById(R.id.toolbar);
-                        drawerLayout = findViewById(R.id.drawer_layout);
-                        nav_view = findViewById(R.id.nav_view);
-                        setSupportActionBar(toolbar);
-
-                        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
-                                this,
-                                drawerLayout,
-                                toolbar,
-                                R.string.tutorial,
-                                R.string.tutorial
-                        );
-
-                        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-                        actionBarDrawerToggle.syncState();
-                        nav_view.setNavigationItemSelectedListener(this);
                     }
 
                         // скроллеры
@@ -324,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 // открываем полученные ссылки
                 else {
+                    try_add();
                     // получить данные о треке
                     make_artist(url);
                     // выполнить новую ссылку
@@ -481,30 +523,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        // загружаем значение чекбокса
-        if(sPref.contains("buf_state")) {
-            Is_Buffer = sPref.getBoolean("buf_state", false);
-        }
+        // загружаем значения настроек
+        Is_Buffer = sPref.getBoolean("buf_state", false);
+        is_bought = sPref.getBoolean("bought_state", false);
+        is_first = sPref.getBoolean("first_state", true);
+        special_shazam = sPref.getBoolean("special_shazam", true);
+        add_counter = sPref.getInt("add_state", 0);
     }
 
     // сохранение выбора для дальнейшего открытия через него по умолчанию
     public static void save() {
         SharedPreferences.Editor ed = sPref.edit();
 
-        // при закрытии сохраняем значение буфера
-        if(Is_Buffer) ed.putBoolean("buf_state", true);
-        else ed.putBoolean("buf_state", false);
-
+        // сохраняем значение буфера
         String bufferset = "";
         for(int i = 0; i < buffer_container.size(); i++) {
             bufferset += buffer_container.get(i);
             bufferset += '|';
         }
 
+        // сохраняем настройки
+        ed.putBoolean("buf_state", Is_Buffer);
+        ed.putBoolean("bought_state", is_bought);
+        ed.putBoolean("first_state", is_first);
+        ed.putBoolean("special_shazam", special_shazam);
+        ed.putInt("add_state", add_counter);
         ed.putString("buffer_container", bufferset);
         ed.putInt("open_state", open_state);
         ed.putInt("send_state", send_state);
         ed.apply();
+    }
+
+    // обработка рекламы
+    void try_add() {
+        if (!is_bought) {
+            add_counter++;
+            save();
+            if (add_counter == 10) {
+                //add.show();
+                add_counter = 0;
+            }
+        }
     }
 
     @Override
@@ -531,6 +590,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        switch (item.getItemId()) {
+            // туториалы
+            case R.id.tutorial_open:
+                Log.w("check","tutorial_open clicked");
+                return true;
+            case R.id.tutorial_send:
+                Log.w("check","tutorial_send clicked");
+                return true;
+            case R.id.tutorial_buffer:
+                Log.w("check","tutorial_buffer clicked");
+                return true;
+            case R.id.tutorial_reopen:
+                Log.w("check","tutorial_reopen clicked");
+                return true;
+
+            // настройки
+            /*case R.id.special_shazam:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                special_shazam = item.isChecked();
+                save();
+                return false;
+            case R.id.use_buffer:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                Is_Buffer = item.isChecked();
+                chip_buffer.setChecked(item.isChecked());
+                save();
+                return false;*/
+
+            // о приложении
+            case R.id.rate:
+                Log.w("check","rate clicked");
+                return true;
+            case R.id.donate:
+                Log.w("check","donate clicked");
+                return true;
+            case R.id.addblock:
+                Log.w("check","addblock clicked");
+                return true;
+        }
+        return true;
     }
+
+    /*void find_apps () {
+        Intent intent = new Intent(null, dataUri);
+        intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
+    }*/
 }

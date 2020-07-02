@@ -4,5 +4,7 @@
         <item name="android:statusBarColor">@color/font</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarColor">@color/Primary</item>
+        <item name="android:listDivider">@color/Light</item>
     </style>
+
 </resources>

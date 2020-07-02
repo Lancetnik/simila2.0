@@ -60,7 +60,7 @@
 
                     app:tint="@color/font"
                     app:fabCustomSize="40dp"
-                    app:backgroundTint="@color/Primary"
+                    app:backgroundTint="@color/Light"
                     app:borderWidth="0dp"
                     android:elevation="0dp"
                     app:srcCompat="@drawable/delete_outline" />
@@ -77,7 +77,7 @@
                     app:srcCompat="@drawable/share"
                     app:tint="@color/font"
                     app:fabCustomSize="40dp"
-                    app:backgroundTint="@color/Primary"
+                    app:backgroundTint="@color/Light"
                     app:borderWidth="0dp"
                     android:elevation="0dp"
                     />
