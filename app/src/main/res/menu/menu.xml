@@ -2,12 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="not visible" /> <!--Not touch-->
+    <item android:title="not visible"
+        android:clickable="false"/> <!--Not touch-->
 
    <!--tutorials-->
         <item app:actionLayout="@menu/tutorial_title"
             android:title=""
-            app:showAsAction="always"/>
+            android:clickable="false"/>
 
         <item android:id="@+id/tutorial_open"
             app:actionLayout="@menu/open"
@@ -27,21 +28,24 @@
     <group android:id="@+id/settings">
         <item app:actionLayout="@menu/settings_title"
             android:title=""
-            app:showAsAction="always"/>
+            android:clickable="false"/>
 
         <item android:id="@+id/special_shazam"
             app:actionLayout="@menu/shazam_menu_item"
             android:title=" "
-            app:showAsAction="always"/>
+            app:showAsAction="always"
+            android:clickable="false"/>
         <item android:id="@+id/use_buffer"
             app:actionLayout="@menu/buffer_menu_item"
             android:title=" "
-            app:showAsAction="always"/>
+            app:showAsAction="always"
+            android:clickable="false"/>
     </group>
 
     <!--about app-->
-    <item app:actionLayout="@menu/more"
-        android:title=" " />
+    <item app:actionLayout="@menu/more_title"
+        android:title=" "
+        android:clickable="false"/>
     <item android:id="@+id/donate"
         app:actionLayout="@menu/food"
         android:title=" " />

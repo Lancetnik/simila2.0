@@ -14,10 +14,10 @@
 
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
-        android:fontFamily="@font/aldrich"
+        android:fontFamily="@font/font_for_buffer_item_song"
 
         android:paddingTop="10dp"
-        android:textColor="@color/Primary"
+        android:textColor="@color/for_buffer_primary"
         android:textSize="14sp" />
 
     <TextView
@@ -26,10 +26,10 @@
         android:layout_height="wrap_content"
 
         android:layout_below="@+id/buffer_item_track"
-        android:fontFamily="@font/abril_fatface"
+        android:fontFamily="@font/font_for_buffer_item_autor"
 
         android:paddingBottom="10dp"
-        android:textColor="@color/Light"
+        android:textColor="@color/for_buffer_light"
         android:textSize="12sp" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -48,7 +48,7 @@
 
 
             app:srcCompat="@drawable/delete_outline"
-            app:tint="@color/Light"
+            app:tint="@color/for_buffer_light"
             app:fabCustomSize="40dp"
             app:backgroundTint="@color/font"
             app:borderWidth="0dp"
@@ -65,7 +65,7 @@
             android:layout_marginLeft="43dp"
 
             app:srcCompat="@drawable/share"
-            app:tint="@color/Light"
+            app:tint="@color/for_buffer_light"
             app:fabCustomSize="40dp"
             app:backgroundTint="@color/font"
             app:borderWidth="0dp"

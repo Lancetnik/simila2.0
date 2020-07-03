@@ -155,29 +155,72 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     // выпадающее меню
                     {
-                        toolbar = findViewById(R.id.toolbar);
-                        drawerLayout = findViewById(R.id.drawer_layout);
-                        nav_view = findViewById(R.id.nav_view);
-                        buffer_switcher = nav_view.findViewById(R.id.buffer_menu_switcher);
-                        shazam_switcher = findViewById(R.id.shazam_menu_switcher);
-                        buffer_help_button = findViewById(R.id.buffer_help_button);
-                        shazam_help_button = findViewById(R.id.shazam_help_button);
-                        setSupportActionBar(toolbar);
+                        // инициализация
+                        {
+                            toolbar = findViewById(R.id.toolbar);
+                            drawerLayout = findViewById(R.id.drawer_layout);
+                            nav_view = findViewById(R.id.nav_view);
+                            setSupportActionBar(toolbar);
 
-                        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
-                                this,
-                                drawerLayout,
-                                toolbar,
-                                R.string.tutorial,
-                                R.string.tutorial
-                        );
+                            ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                                    this,
+                                    drawerLayout,
+                                    toolbar,
+                                    R.string.tutorial,
+                                    R.string.tutorial
+                            );
 
-                        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-                        actionBarDrawerToggle.syncState();
-                        nav_view.setNavigationItemSelectedListener(this);
+                            drawerLayout.addDrawerListener(actionBarDrawerToggle);
+                            actionBarDrawerToggle.syncState();
+                            nav_view.setNavigationItemSelectedListener(this);
+                        }
 
-                        nav_view.getMenu().getItem(2).getSubMenu().getItem(1)
 
+                        // кнопки и свитчеры
+                        {
+                            buffer_help_button = (FloatingActionButton) nav_view.getMenu().findItem(R.id.use_buffer).getActionView().findViewById(R.id.buffer_help_button);
+                            buffer_switcher = (SwitchMaterial) nav_view.getMenu().findItem(R.id.use_buffer).getActionView().findViewById(R.id.buffer_menu_switcher);
+                            buffer_switcher.setChecked(Is_Buffer);
+                            buffer_help_button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.w("check", "buffer_help_button pressed");
+                                }
+                            });
+                            buffer_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                                    Is_Buffer = isChecked;
+                                    save();
+                                    chip_buffer.setChecked(isChecked);
+                                    if (isChecked) {
+                                        chip_buffer.setText("Is Using");
+                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                    }
+                                    else {
+                                        chip_buffer.setText("Use It");
+                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                    }
+                                }
+                            });
+
+                            shazam_help_button = (FloatingActionButton) nav_view.getMenu().findItem(R.id.special_shazam).getActionView().findViewById(R.id.shazam_help_button);
+                            shazam_switcher = (SwitchMaterial) nav_view.getMenu().findItem(R.id.special_shazam).getActionView().findViewById(R.id.shazam_menu_switcher);
+                            shazam_switcher.setChecked(special_shazam);
+                            shazam_help_button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.w("check", "shazam_help_button pressed");
+                                }
+                            });
+                            shazam_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                                    special_shazam = isChecked;
+                                    save();
+                                }
+                            });
+                        }
                     }
 
                     // буфер
@@ -230,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void onCheckedChanged(CompoundButton view, boolean isChecked) {
                                     Is_Buffer = isChecked;
                                     save();
+                                    buffer_switcher.setChecked(isChecked);
                                     if (isChecked) {
                                         chip_buffer.setText("Is Using");
                                         bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -399,51 +443,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (pager == 1) {
             ImageView first = findViewById(R.id.Img1Pager1);
             first.setImageResource(R.drawable.point);
+            first.setColorFilter(getColor(R.color.selectors_nav_point));
             ImageView second = findViewById(R.id.Img2Pager1);
             second.setImageResource(R.drawable.point);
+            second.setColorFilter(getColor(R.color.selectors_nav_point));
             ImageView third = findViewById(R.id.Img3Pager1);
             third.setImageResource(R.drawable.point);
+            third.setColorFilter(getColor(R.color.selectors_nav_point));
             ImageView fourth = findViewById(R.id.Img4Pager1);
             fourth.setImageResource(R.drawable.point);
+            fourth.setColorFilter(getColor(R.color.selectors_nav_point));
             ImageView fifth = findViewById(R.id.Img5Pager1);
             fifth.setImageResource(R.drawable.point);
+            fifth.setColorFilter(getColor(R.color.selectors_nav_point));
             ImageView sixth = findViewById(R.id.Img6Pager1);
             sixth.setImageResource(R.drawable.point);
+            sixth.setColorFilter(getColor(R.color.selectors_nav_point));
             ImageView seventh = findViewById(R.id.Img7Pager1);
             seventh.setImageResource(R.drawable.point);
+            seventh.setColorFilter(getColor(R.color.selectors_nav_point));
             ImageView eight = findViewById(R.id.Img8Pager1);
             eight.setImageResource(R.drawable.point);
+            eight.setColorFilter(getColor(R.color.selectors_nav_point));
             switch (number) {
                 case 1: {
                     first.setImageResource(R.drawable.active_point);
+                    first.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
                 case 2: {
                     second.setImageResource(R.drawable.active_point);
+                    second.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
                 case 3: {
                     third.setImageResource(R.drawable.active_point);
+                    third.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
                 case 4: {
                     fourth.setImageResource(R.drawable.active_point);
+                    fourth.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
                 case 5: {
                     fifth.setImageResource(R.drawable.active_point);
+                    fifth.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
                 case 6: {
                     sixth.setImageResource(R.drawable.active_point);
+                    sixth.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
                 case 7: {
                     seventh.setImageResource(R.drawable.active_point);
+                    seventh.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
                 case 8: {
                     eight.setImageResource(R.drawable.active_point);
+                    eight.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
             }
@@ -451,51 +511,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (pager == 2) {
                 ImageView first = findViewById(R.id.Img1Pager2);
                 first.setImageResource(R.drawable.point);
+                first.setColorFilter(getColor(R.color.selectors_nav_point));
                 ImageView second = findViewById(R.id.Img2Pager2);
                 second.setImageResource(R.drawable.point);
+                second.setColorFilter(getColor(R.color.selectors_nav_point));
                 ImageView third = findViewById(R.id.Img3Pager2);
                 third.setImageResource(R.drawable.point);
+                third.setColorFilter(getColor(R.color.selectors_nav_point));
                 ImageView fourth = findViewById(R.id.Img4Pager2);
                 fourth.setImageResource(R.drawable.point);
+                fourth.setColorFilter(getColor(R.color.selectors_nav_point));
                 ImageView fifth = findViewById(R.id.Img5Pager2);
                 fifth.setImageResource(R.drawable.point);
+                fifth.setColorFilter(getColor(R.color.selectors_nav_point));
                 ImageView sixth = findViewById(R.id.Img6Pager2);
                 sixth.setImageResource(R.drawable.point);
+                sixth.setColorFilter(getColor(R.color.selectors_nav_point));
                 ImageView seventh = findViewById(R.id.Img7Pager2);
                 seventh.setImageResource(R.drawable.point);
+                seventh.setColorFilter(getColor(R.color.selectors_nav_point));
                 ImageView eight = findViewById(R.id.Img8Pager2);
                 eight.setImageResource(R.drawable.point);
+                eight.setColorFilter(getColor(R.color.selectors_nav_point));
                 switch (number) {
                     case 1: {
                         first.setImageResource(R.drawable.active_point);
+                        first.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                     case 2: {
                         second.setImageResource(R.drawable.active_point);
+                        second.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                     case 3: {
                         third.setImageResource(R.drawable.active_point);
+                        third.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                     case 4: {
                         fourth.setImageResource(R.drawable.active_point);
+                        fourth.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                     case 5: {
                         fifth.setImageResource(R.drawable.active_point);
+                        fifth.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                     case 6: {
                         sixth.setImageResource(R.drawable.active_point);
+                        sixth.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                     case 7: {
                         seventh.setImageResource(R.drawable.active_point);
+                        seventh.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                     case 8: {
                         eight.setImageResource(R.drawable.active_point);
+                        eight.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                 }

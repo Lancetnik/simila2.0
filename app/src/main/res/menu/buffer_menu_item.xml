@@ -9,8 +9,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/Light"
-        android:fontFamily="@font/aldrich"
+        android:textColor="@color/for_nav_item"
+        android:fontFamily="@font/font_for_nav_items"
         android:text="Buffer"/>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -20,8 +20,7 @@
         android:layout_marginLeft="80dp"
 
         app:thumbTint ="@drawable/switcher_color"
-        app:trackTint ="@drawable/switcher_color"
-        android:textColor="@color/Light"/>
+        app:trackTint ="@drawable/switcher_color"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buffer_help_button"
@@ -32,7 +31,7 @@
 
 
         app:srcCompat="@drawable/help_icon"
-        app:tint="@color/Light"
+        app:tint="@color/for_nav_item"
         app:fabCustomSize="40dp"
         app:backgroundTint="@color/font"
         app:borderWidth="0dp"

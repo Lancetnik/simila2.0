@@ -10,9 +10,9 @@
     <TextView
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/Light"
-        android:fontFamily="@font/aldrich"
+        android:textColor="@color/for_nav_item"
+        android:fontFamily="@font/font_for_nav_items"
         android:textAlignment="viewStart"
-        android:text="Buy addblock"/>
+        android:text="Buy adblock"/>
 
 </LinearLayout>

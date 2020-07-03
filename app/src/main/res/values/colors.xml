@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <color name="Primary">#f5eb62</color>
-    <color name="Light">#f5f19f</color>
-    <color name="font">#141413</color>
+    <color name="DeepYellow">#f5eb62</color>
+    <color name="LightYellow">#f5f19f</color>
+    <color name="Black">#141413</color>
     <color name="colorWhite">#FFFFFF</color>
+
+    <color name="font">@color/Black</color>
+    <color name="for_nav_item">@color/LightYellow</color>
+    <color name="for_nav_title">@color/DeepYellow</color>
+    <color name="for_buffer_light">@color/LightYellow</color>
+    <color name="for_buffer_primary">@color/DeepYellow</color>
+    <color name="bars">@color/DeepYellow</color>
+    <color name="selectors_logo_text">@color/LightYellow</color>
+    <color name="selectors_nav_point">#333</color>
+    <color name="selectors_nav_point_active">@color/DeepYellow</color>
 </resources>
