@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@layout/border">
+
+    <TextView
+        android:padding="5dp"
+        android:id="@+id/buffer_help_text"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/for_nav_item"
+        android:fontFamily="@font/font_for_help_menu"
+        android:textAlignment="viewStart"
+        android:text="With this setting, the tracks you want to send will be buffered.\nThen you can send them all at once from the application."/>
+
+</LinearLayout>

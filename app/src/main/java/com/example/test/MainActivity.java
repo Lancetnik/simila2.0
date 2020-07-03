@@ -15,10 +15,17 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -87,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Intent intent = getIntent();
         String url = intent.getDataString();
 
-
         // отправляем ссылку самому себе, чтобы открыть в другом приложении
         if (intent.getClipData()!=null && String.valueOf(intent.getClipData()).contains("Simila")){
             try_add();
@@ -96,9 +102,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Pattern p = Pattern.compile("http.*");
             Matcher m = p.matcher(str);
             String url1 = "";
-            while(m.find()){
+            while(m.find())
                 url1 = m.group().substring(0,(m.group().length()-35));
-            }
 
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url1));
             startActivity(browserIntent);
@@ -184,7 +189,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             buffer_help_button.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Log.w("check", "buffer_help_button pressed");
+                                    PopupMenuCustomLayout popupMenu = new PopupMenuCustomLayout(MainActivity.this, R.layout.help_buffer_layout,
+                                            new PopupMenuCustomLayout.PopupMenuCustomOnClickListener() {
+                                                @Override
+                                                public void onClick(int itemId) {
+                                                    switch (itemId) {
+                                                        case R.id.buffer_help_text:
+                                                            break;
+                                                    }
+                                                }
+                                            });
+                                    popupMenu.show( v, 94, -195);
                                 }
                             });
                             buffer_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -210,7 +225,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             shazam_help_button.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Log.w("check", "shazam_help_button pressed");
+                                    PopupMenuCustomLayout popupMenu = new PopupMenuCustomLayout(MainActivity.this, R.layout.help_shazam_layout,
+                                            new PopupMenuCustomLayout.PopupMenuCustomOnClickListener() {
+                                                @Override
+                                                public void onClick(int itemId) {
+                                                    switch (itemId) {
+                                                        case R.id.shazam_help_text:
+                                                            break;
+                                                    }
+                                                }
+                                            });
+                                    popupMenu.show( v, 94, -195);
                                 }
                             });
                             shazam_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -710,8 +735,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /*void find_apps () {
+    /* так отслеживаются приложения, которые могут принять интент (проброс пробного интента)
+    Мы можем сделать выбор только из установленных приложений, а не из всех
+    void find_apps () {
         Intent intent = new Intent(null, dataUri);
         intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
     }*/
+
+    // кастомное выпадающее меню
+    public static class PopupMenuCustomLayout {
+        private PopupMenuCustomOnClickListener onClickListener;
+        private Context context;
+        private PopupWindow popupWindow;
+        private int rLayoutId;
+        private View popupView;
+
+        public PopupMenuCustomLayout(Context context, int rLayoutId, PopupMenuCustomOnClickListener onClickListener) {
+            this.context = context;
+            this.onClickListener = onClickListener;
+            this.rLayoutId = rLayoutId;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+            popupView = inflater.inflate(rLayoutId, null);
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            boolean focusable = true;
+            popupWindow = new PopupWindow(popupView, width, height, focusable);
+            popupWindow.setElevation(10);
+
+            LinearLayout linearLayout = (LinearLayout) popupView;
+            for (int i = 0; i < linearLayout.getChildCount(); i++) {
+                View v = linearLayout.getChildAt(i);
+                v.setOnClickListener( v1 -> { onClickListener.onClick( v1.getId()); popupWindow.dismiss(); });
+            }
+        }
+        public void setAnimationStyle( int animationStyle) {
+            popupWindow.setAnimationStyle(animationStyle);
+        }
+        public void show() {
+            popupWindow.showAtLocation( popupView, Gravity.CENTER, 0, 0);
+        }
+
+        public void show( View anchorView, int offsetX, int offsetY) {
+            popupWindow.showAsDropDown( anchorView, 4 + offsetX, -2 * (anchorView.getHeight()) - offsetY);
+        }
+
+        public interface PopupMenuCustomOnClickListener {
+            public void onClick(int menuItemId);
+        }
+    }
 }
