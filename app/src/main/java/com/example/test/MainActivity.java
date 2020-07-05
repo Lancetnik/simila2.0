@@ -1,6 +1,7 @@
 package com.example.test;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -9,10 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -65,8 +68,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private SwitchMaterial buffer_switcher;
     private SwitchMaterial shazam_switcher;
+    private SwitchMaterial sender_switcher;
     private FloatingActionButton buffer_help_button;
     private FloatingActionButton shazam_help_button;
+    private FloatingActionButton sender_help_button;
 
     // для сохранения
     private static SharedPreferences sPref;
@@ -76,9 +81,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static boolean is_bought = false; // куплена ли фулл версия
     private static int add_counter; // счетчик для октрытия рекламы
     private static boolean special_shazam = false; // отправлять ли ссылки из шазама сразу на открытие в своем сервисе
+    public static boolean use_last_sender = false;
+    public static String last_sender_app; // последний сервис, куда отправляли
 
     String[] Track;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,11 +146,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 // отправляем напрямую, если нет буфера
                 else {
-                    Intent intent2 = new Intent();
-                    intent2.setAction(Intent.ACTION_SEND);
-                    intent2.setType("text/plain");
-                    intent2.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
-                    startActivity(Intent.createChooser(intent2, "Share"));
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("text/plain");
+                    share.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
+
+                    if (use_last_sender && !last_sender_app.equals(""))
+                        share.setPackage(last_sender_app);
+                    else {
+                        PendingIntent pi = PendingIntent.getBroadcast(this, 0,
+                                new Intent(this, Receiver.class),
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+                        share = Intent.createChooser(share, null, pi.getIntentSender());
+                    }
+
+                    startActivity(share);
                     this.finish();
                 }
             }
@@ -184,68 +201,104 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         // кнопки и свитчеры
                         {
-                            buffer_help_button = (FloatingActionButton) nav_view.getMenu().findItem(R.id.use_buffer).getActionView().findViewById(R.id.buffer_help_button);
-                            buffer_switcher = (SwitchMaterial) nav_view.getMenu().findItem(R.id.use_buffer).getActionView().findViewById(R.id.buffer_menu_switcher);
-                            buffer_switcher.setChecked(Is_Buffer);
-                            buffer_help_button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    PopupMenuCustomLayout popupMenu = new PopupMenuCustomLayout(MainActivity.this, R.layout.help_buffer_layout,
-                                            new PopupMenuCustomLayout.PopupMenuCustomOnClickListener() {
-                                                @Override
-                                                public void onClick(int itemId) {
-                                                    switch (itemId) {
-                                                        case R.id.buffer_help_text:
-                                                            break;
+                            // буфер
+                            {
+                                buffer_help_button = (FloatingActionButton) nav_view.getMenu().findItem(R.id.use_buffer).getActionView().findViewById(R.id.buffer_help_button);
+                                buffer_switcher = (SwitchMaterial) nav_view.getMenu().findItem(R.id.use_buffer).getActionView().findViewById(R.id.buffer_menu_switcher);
+                                buffer_switcher.setChecked(Is_Buffer);
+                                buffer_help_button.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        PopupMenuCustomLayout popupMenu = new PopupMenuCustomLayout(MainActivity.this, R.layout.help_buffer_layout,
+                                                new PopupMenuCustomLayout.PopupMenuCustomOnClickListener() {
+                                                    @Override
+                                                    public void onClick(int itemId) {
+                                                        switch (itemId) {
+                                                            case R.id.buffer_help_text:
+                                                                break;
+                                                        }
                                                     }
-                                                }
-                                            });
-                                    popupMenu.show( v, 94, -195);
-                                }
-                            });
-                            buffer_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-                                    Is_Buffer = isChecked;
-                                    save();
-                                    chip_buffer.setChecked(isChecked);
-                                    if (isChecked) {
-                                        chip_buffer.setText("Is Using");
-                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                                });
+                                        popupMenu.show(v, 94, -195);
                                     }
-                                    else {
-                                        chip_buffer.setText("Use It");
-                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                });
+                                buffer_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                                        Is_Buffer = isChecked;
+                                        save();
+                                        chip_buffer.setChecked(isChecked);
+                                        if (isChecked) {
+                                            chip_buffer.setText("Is Using");
+                                            bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                        } else {
+                                            chip_buffer.setText("Use It");
+                                            bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
 
-                            shazam_help_button = (FloatingActionButton) nav_view.getMenu().findItem(R.id.special_shazam).getActionView().findViewById(R.id.shazam_help_button);
-                            shazam_switcher = (SwitchMaterial) nav_view.getMenu().findItem(R.id.special_shazam).getActionView().findViewById(R.id.shazam_menu_switcher);
-                            shazam_switcher.setChecked(special_shazam);
-                            shazam_help_button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    PopupMenuCustomLayout popupMenu = new PopupMenuCustomLayout(MainActivity.this, R.layout.help_shazam_layout,
-                                            new PopupMenuCustomLayout.PopupMenuCustomOnClickListener() {
-                                                @Override
-                                                public void onClick(int itemId) {
-                                                    switch (itemId) {
-                                                        case R.id.shazam_help_text:
-                                                            break;
+                            // шазам
+                            {
+                                shazam_help_button = (FloatingActionButton) nav_view.getMenu().findItem(R.id.special_shazam).getActionView().findViewById(R.id.shazam_help_button);
+                                shazam_switcher = (SwitchMaterial) nav_view.getMenu().findItem(R.id.special_shazam).getActionView().findViewById(R.id.shazam_menu_switcher);
+                                shazam_switcher.setChecked(special_shazam);
+                                shazam_help_button.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        PopupMenuCustomLayout popupMenu = new PopupMenuCustomLayout(MainActivity.this, R.layout.help_shazam_layout,
+                                                new PopupMenuCustomLayout.PopupMenuCustomOnClickListener() {
+                                                    @Override
+                                                    public void onClick(int itemId) {
+                                                        switch (itemId) {
+                                                            case R.id.shazam_help_text:
+                                                                break;
+                                                        }
                                                     }
-                                                }
-                                            });
-                                    popupMenu.show( v, 94, -195);
-                                }
-                            });
-                            shazam_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-                                    special_shazam = isChecked;
-                                    save();
-                                }
-                            });
+                                                });
+                                        popupMenu.show(v, 94, -195);
+                                    }
+                                });
+                                shazam_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                                        special_shazam = isChecked;
+                                        save();
+                                    }
+                                });
+                            }
+
+                            // средство отправки
+                            {
+                                sender_help_button = (FloatingActionButton) nav_view.getMenu().findItem(R.id.sender).getActionView().findViewById(R.id.sender_help_button);
+                                sender_switcher = (SwitchMaterial) nav_view.getMenu().findItem(R.id.sender).getActionView().findViewById(R.id.sender_menu_switcher);
+                                sender_switcher.setChecked(use_last_sender);
+                                sender_help_button.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        PopupMenuCustomLayout popupMenu = new PopupMenuCustomLayout(MainActivity.this, R.layout.help_sender_layout,
+                                                new PopupMenuCustomLayout.PopupMenuCustomOnClickListener() {
+                                                    @Override
+                                                    public void onClick(int itemId) {
+                                                        switch (itemId) {
+                                                            case R.id.sender_help_text:
+                                                                break;
+                                                        }
+                                                    }
+                                                });
+                                        popupMenu.show(v, 94, -195);
+                                    }
+                                });
+                                sender_switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton view, boolean isChecked) {
+                                        use_last_sender = isChecked;
+                                        last_sender_app = "";
+                                        save();
+                                    }
+                                });
+                            }
                         }
                     }
 
@@ -337,11 +390,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             count += 1;
                                         }
 
-                                        Intent intent2 = new Intent();
-                                        intent2.setAction(Intent.ACTION_SEND);
-                                        intent2.setType("text/plain");
-                                        intent2.putExtra(Intent.EXTRA_TEXT, text_to_send + " сгенерировано с помощью Simila");
-                                        startActivity(Intent.createChooser(intent2, "Share"));
+                                        Intent share = new Intent(Intent.ACTION_SEND);
+                                        share.setType("text/plain");
+                                        share.putExtra(Intent.EXTRA_TEXT, text_to_send + " сгенерировано с помощью Simila");
+
+                                        if (use_last_sender && !last_sender_app.equals(""))
+                                            share.setPackage(last_sender_app);
+                                        else {
+                                            PendingIntent pi = PendingIntent.getBroadcast(MainActivity.this, 0,
+                                                    new Intent(MainActivity.this, Receiver.class),
+                                                    PendingIntent.FLAG_UPDATE_CURRENT);
+                                            share = Intent.createChooser(share, null, pi.getIntentSender());
+                                        }
+
+                                        startActivity(share);
                                     }
                                 }
                             };
@@ -607,6 +669,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // загружаем значения настроек
+        use_last_sender = sPref.getBoolean("use_last_sender", false);
+        last_sender_app = sPref.getString("last_sender_app","");
         Is_Buffer = sPref.getBoolean("buf_state", false);
         is_bought = sPref.getBoolean("bought_state", false);
         is_first = sPref.getBoolean("first_state", true);
@@ -626,12 +690,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // сохраняем настройки
+        ed.putBoolean("use_last_sender", use_last_sender);
         ed.putBoolean("buf_state", Is_Buffer);
         ed.putBoolean("bought_state", is_bought);
         ed.putBoolean("first_state", is_first);
         ed.putBoolean("special_shazam", special_shazam);
         ed.putInt("add_state", add_counter);
         ed.putString("buffer_container", bufferset);
+        ed.putString("last_sender_app", last_sender_app);
         ed.putInt("open_state", open_state);
         ed.putInt("send_state", send_state);
         ed.apply();

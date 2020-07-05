@@ -1,12 +1,15 @@
 package com.example.test;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -47,7 +50,9 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     MainActivity.Clear_button.callOnClick();
             }
         });
+
         holder.SendButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
             @Override
             public void onClick(View v) {
                 String[] Track = new String[2];
@@ -55,11 +60,20 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 Track[1] = holder.BufferItemTrack.getText().toString();
                 String newUrl = UrlMaker.make_url(MainActivity.send_state, Track);
 
-                Intent intent2 = new Intent();
-                intent2.setAction(Intent.ACTION_SEND);
-                intent2.setType("text/plain");
-                intent2.putExtra(Intent.EXTRA_TEXT, newUrl + " сгенерировано с помощью Simila");
-                v.getContext().startActivity(Intent.createChooser(intent2, "Share"));
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, newUrl + " сгенерировано с помощью Simila");
+
+                if (MainActivity.use_last_sender && !MainActivity.last_sender_app.equals(""))
+                    share.setPackage(MainActivity.last_sender_app);
+                else {
+                    PendingIntent pi = PendingIntent.getBroadcast(v.getContext(), 0,
+                            new Intent(v.getContext(), Receiver.class),
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+                    share = Intent.createChooser(share, null, pi.getIntentSender());
+                }
+
+                v.getContext().startActivity(share);
             }
         });
     }

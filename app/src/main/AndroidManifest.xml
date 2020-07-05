@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <receiver android:name=".Receiver">
+            <intent-filter>
+                <action android:name="android.intent.action.EXTRA_CHOSEN_COMPONENT" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.ALTERNATIVE" />

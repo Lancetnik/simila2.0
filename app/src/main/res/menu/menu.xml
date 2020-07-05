@@ -40,6 +40,11 @@
             android:title=" "
             app:showAsAction="always"
             android:clickable="false"/>
+        <item android:id="@+id/sender"
+            app:actionLayout="@menu/last_sender_item"
+            android:title=" "
+            app:showAsAction="always"
+            android:clickable="false"/>
     </group>
 
     <!--about app-->
