@@ -17,14 +17,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -130,8 +127,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 // сохраняем в буфер, если он выбран
                 if(Is_Buffer) {
-                    buffer_container.add(Track[0]+" - "+Track[1]);
-                    save();
+                    String cur_track = Track[0]+" - "+Track[1];
+                    // если трек еще не в буфере
+                    if (!buffer_container.contains(cur_track)) {
+                        buffer_container.add(cur_track);
+                        save();
+                    }
                     this.finish();
                 }
 
@@ -260,31 +261,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             recyclerView = (RecyclerView) findViewById(R.id.list_view);
 
                             bottom_sheet_behavior = BottomSheetBehavior.from(buffer_sheet);
-                            bottom_sheet_behavior.setHideable(false);
                             bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            bottom_sheet_behavior.setHideable(false);
                             if (buffer_container.isEmpty()) {
                                 buf_title.setText("Buffer is empty");
                                 Clear_button.setVisibility(View.GONE);
                                 Send_button.setVisibility(View.GONE);
+                                bottom_sheet_behavior.setDraggable(false);
                             }
                             else {
                                 buf_title.setText("Buffer");
                                 chip_buffer.setVisibility(View.GONE);
                             }
-                            bottom_sheet_behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                                @Override
-                                public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                                    if (buffer_container.isEmpty()) {
-                                        if (newState == BottomSheetBehavior.STATE_EXPANDED)
-                                            bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                                    }
-                                }
 
-                                @Override
-                                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-                                }
-                            });
                         }
 
                         // буфер чекбокс
@@ -299,14 +288,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     Is_Buffer = isChecked;
                                     save();
                                     buffer_switcher.setChecked(isChecked);
-                                    if (isChecked) {
-                                        chip_buffer.setText("Is Using");
-                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                                    }
-                                    else {
-                                        chip_buffer.setText("Use It");
-                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                                    }
+                                    if (isChecked) chip_buffer.setText("Is Using");
+                                    else chip_buffer.setText("Use It");
                                 }
                             });
                         }
@@ -328,11 +311,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     buffer_container.clear();
                                     save();
                                     mAdapter.notifyDataSetChanged();
-                                    bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                                     buf_title.setText("Buffer is empty");
                                     Clear_button.setVisibility(View.GONE);
                                     Send_button.setVisibility(View.GONE);
                                     chip_buffer.setVisibility(View.VISIBLE);
+                                    bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                    bottom_sheet_behavior.setDraggable(false);
                                 }
                             };
                             Clear_button.setOnClickListener(clear_button_listener);
@@ -358,8 +342,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         intent2.setType("text/plain");
                                         intent2.putExtra(Intent.EXTRA_TEXT, text_to_send + " сгенерировано с помощью Simila");
                                         startActivity(Intent.createChooser(intent2, "Share"));
-
-                                        bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                                     }
                                 }
                             };
@@ -680,12 +662,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Clear_button.setVisibility(View.GONE);
             Send_button.setVisibility(View.GONE);
             chip_buffer.setVisibility(View.VISIBLE);
+            bottom_sheet_behavior.setDraggable(false);
         }
         else {
             buf_title.setText("Buffer");
             Clear_button.setVisibility(View.VISIBLE);
             Send_button.setVisibility(View.VISIBLE);
             chip_buffer.setVisibility(View.GONE);
+            bottom_sheet_behavior.setDraggable(true);
         }
     }
 

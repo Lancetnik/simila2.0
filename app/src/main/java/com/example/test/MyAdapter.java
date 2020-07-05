@@ -40,17 +40,11 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         holder.DelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mDataset.remove(position);
-                if (mDataset.isEmpty()) {
-                    MainActivity.buf_title.setText("Buffer is empty");
-                    MainActivity.bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    MainActivity.chip_buffer.setVisibility(View.VISIBLE);
-                    MainActivity.Send_button.setVisibility(View.GONE);
-                    MainActivity.Clear_button.setVisibility(View.GONE);
-                }
+                MainActivity.buffer_container.remove(position);
                 MainActivity.save();
-                notifyItemRemoved(position);
                 notifyDataSetChanged();
+                if (mDataset.isEmpty())
+                    MainActivity.Clear_button.callOnClick();
             }
         });
         holder.SendButton.setOnClickListener(new View.OnClickListener() {
