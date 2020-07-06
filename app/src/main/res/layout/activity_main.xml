@@ -141,19 +141,6 @@
                 android:tint="@color/selectors_nav_point"
                 >
             </ImageView>
-            <ImageView
-                android:id="@+id/Img8Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
         </LinearLayout>
 
 
@@ -270,19 +257,6 @@
             </ImageView>
             <ImageView
                 android:id="@+id/Img7Pager2"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img8Pager2"
 
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"

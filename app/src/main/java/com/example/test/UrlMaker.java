@@ -17,8 +17,7 @@ public class UrlMaker {
         if (open_state == 2)  newUrl = MakeYoutubeUrl(Track);
         if (open_state == 3)  newUrl = MakeShazamUrl(Track); // not working
         if (open_state == 4)  newUrl = MakeDeezerUrl(Track);
-        if (open_state == 5)  newUrl = MakeGoogleUrl(Track); // not working as well
-        if (open_state == 6)  newUrl = MakeAppleUrl(Track); // not working as well
+        if (open_state == 5)  newUrl = MakeAppleUrl(Track); // not working as well
         return newUrl;
     }
 

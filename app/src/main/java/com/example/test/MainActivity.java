@@ -419,7 +419,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         models.add(new Model(R.drawable.youtube));
                         models.add(new Model(R.drawable.shazam));
                         models.add(new Model(R.drawable.deezer));
-                        models.add(new Model(R.drawable.google));
                         models.add(new Model(R.drawable.apple));
                         models.add(new Model(R.drawable.youtube_music));
 
@@ -531,9 +530,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ImageView seventh = findViewById(R.id.Img7Pager1);
             seventh.setImageResource(R.drawable.point);
             seventh.setColorFilter(getColor(R.color.selectors_nav_point));
-            ImageView eight = findViewById(R.id.Img8Pager1);
-            eight.setImageResource(R.drawable.point);
-            eight.setColorFilter(getColor(R.color.selectors_nav_point));
             switch (number) {
                 case 1: {
                     first.setImageResource(R.drawable.active_point);
@@ -570,11 +566,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     seventh.setColorFilter(getColor(R.color.selectors_nav_point_active));
                     break;
                 }
-                case 8: {
-                    eight.setImageResource(R.drawable.active_point);
-                    eight.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
             }
         }
         if (pager == 2) {
@@ -599,9 +590,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ImageView seventh = findViewById(R.id.Img7Pager2);
                 seventh.setImageResource(R.drawable.point);
                 seventh.setColorFilter(getColor(R.color.selectors_nav_point));
-                ImageView eight = findViewById(R.id.Img8Pager2);
-                eight.setImageResource(R.drawable.point);
-                eight.setColorFilter(getColor(R.color.selectors_nav_point));
                 switch (number) {
                     case 1: {
                         first.setImageResource(R.drawable.active_point);
@@ -636,11 +624,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     case 7: {
                         seventh.setImageResource(R.drawable.active_point);
                         seventh.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                    case 8: {
-                        eight.setImageResource(R.drawable.active_point);
-                        eight.setColorFilter(getColor(R.color.selectors_nav_point_active));
                         break;
                     }
                 }
