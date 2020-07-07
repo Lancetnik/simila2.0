@@ -30,17 +30,27 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    // реклама
+    public static InterstitialAd mInterstitialAd;
+    public static int ad_counter;
+    public static boolean is_bought = false; // куплена ли фулл версия
 
     // буфер снизу
     private ConstraintLayout buffer_sheet;
@@ -78,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static Integer open_state = 2; // значение скроллера для открытия
     public static Integer send_state = 2; // значение скроллера для закрытия
     private static boolean is_first = true; // первый ли раз открыта программа
-    private static boolean is_bought = false; // куплена ли фулл версия
-    private static int add_counter; // счетчик для октрытия рекламы
     private static boolean special_shazam = false; // отправлять ли ссылки из шазама сразу на открытие в своем сервисе
     public static boolean use_last_sender = false;
     public static String last_sender_app; // последний сервис, куда отправляли
@@ -99,9 +107,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Intent intent = getIntent();
         String url = intent.getDataString();
 
+        // реклама
+        {
+            MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
+            mInterstitialAd = new InterstitialAd(this);
+            mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                }
+            });
+        }
+
         // отправляем ссылку самому себе, чтобы открыть в другом приложении
         if (intent.getClipData()!=null && String.valueOf(intent.getClipData()).contains("Simila")){
-            try_add();
+            try_ad();
             // получаем URL из ссылки регуляркой
             String str = String.valueOf(intent.getClipData());
             Pattern p = Pattern.compile("http.*");
@@ -117,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             // передача ссылки
             if (intent.getClipData() != null && url == null) {
-                try_add();
+                try_ad();
                 // получаем URL из ссылки регуляркой
                 String str = String.valueOf(intent.getClipData());
                 Pattern p = Pattern.compile("http.*");
@@ -167,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // открываем само приложение
                 if (url == null) {
                     // открываем основное окно
-                        setContentView(R.layout.activity_main);
+                    setContentView(R.layout.activity_main);
 
                         // обучалка при первом запуске
                         if (is_first) {
@@ -382,6 +404,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void onClick(View v) {
                                     if (!buffer_container.isEmpty())
                                     {
+                                        try_ad();
+
                                         String text_to_send = "";
                                         int count = 1;
                                         assert buffer_container != null;
@@ -477,7 +501,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 // открываем полученные ссылки
                 else {
-                    try_add();
+                    try_ad();
                     // получить данные о треке
                     make_artist(url);
                     // выполнить новую ссылку
@@ -505,7 +529,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return UrlMaker.make_url(state, Track);
     }
 
+    public static void try_ad() {
+        Log.w("check", String.valueOf(ad_counter));
+        if (!is_bought) {
+            if (ad_counter > 2 && mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+                ad_counter = 0;
+            }
+            else ad_counter++;
+            save();
+        }
+    }
+
     // Подсветка нужной точки навигации
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void point_it (int number, int pager) {
         number += 1;
         if (pager == 1) {
@@ -658,7 +695,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         is_bought = sPref.getBoolean("bought_state", false);
         is_first = sPref.getBoolean("first_state", true);
         special_shazam = sPref.getBoolean("special_shazam", true);
-        add_counter = sPref.getInt("add_state", 0);
+        ad_counter = sPref.getInt("add_state", 0);
     }
 
     // сохранение выбора для дальнейшего открытия через него по умолчанию
@@ -678,24 +715,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ed.putBoolean("bought_state", is_bought);
         ed.putBoolean("first_state", is_first);
         ed.putBoolean("special_shazam", special_shazam);
-        ed.putInt("add_state", add_counter);
+        ed.putInt("add_state", ad_counter);
         ed.putString("buffer_container", bufferset);
         ed.putString("last_sender_app", last_sender_app);
         ed.putInt("open_state", open_state);
         ed.putInt("send_state", send_state);
         ed.apply();
-    }
-
-    // обработка рекламы
-    void try_add() {
-        if (!is_bought) {
-            add_counter++;
-            save();
-            if (add_counter == 10) {
-                //add.show();
-                add_counter = 0;
-            }
-        }
     }
 
     @Override
@@ -739,21 +764,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.w("check","tutorial_reopen clicked");
                 return true;
 
-            // настройки
-            /*case R.id.special_shazam:
-                if (item.isChecked()) item.setChecked(false);
-                else item.setChecked(true);
-                special_shazam = item.isChecked();
-                save();
-                return false;
-            case R.id.use_buffer:
-                if (item.isChecked()) item.setChecked(false);
-                else item.setChecked(true);
-                Is_Buffer = item.isChecked();
-                chip_buffer.setChecked(item.isChecked());
-                save();
-                return false;*/
-
             // о приложении
             case R.id.rate:
                 Log.w("check","rate clicked");
@@ -783,6 +793,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private int rLayoutId;
         private View popupView;
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         public PopupMenuCustomLayout(Context context, int rLayoutId, PopupMenuCustomOnClickListener onClickListener) {
             this.context = context;
             this.onClickListener = onClickListener;

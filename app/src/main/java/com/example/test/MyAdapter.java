@@ -55,6 +55,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
             @Override
             public void onClick(View v) {
+                MainActivity.try_ad();
+
                 String[] Track = new String[2];
                 Track[0] = holder.BufferItemAutor.getText().toString();
                 Track[1] = holder.BufferItemTrack.getText().toString();
