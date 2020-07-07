@@ -43,104 +43,13 @@
 
         <!--Навигация по первому слайдеру-->
         <LinearLayout
+            android:id="@+id/first_pager_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/viewPager"
             android:orientation="horizontal"
             android:layout_marginTop="-95dp"
             android:paddingHorizontal="80dp">
-
-            <ImageView
-                android:id="@+id/Img1Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img2Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img3Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img4Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img5Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img6Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img7Pager1"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
         </LinearLayout>
 
 
@@ -171,103 +80,13 @@
 
         <!--Навигация по второму слайдеру-->
         <LinearLayout
+            android:id="@+id/second_pager_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/viewPager2"
             android:orientation="horizontal"
             android:layout_marginTop="-95dp"
             android:paddingHorizontal="80dp">
-
-            <ImageView
-                android:id="@+id/Img1Pager2"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img2Pager2"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img3Pager2"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-
-            <ImageView
-                android:id="@+id/Img4Pager2"
-
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:scaleX="2"
-                android:scaleY="2"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"/>
-            <ImageView
-                android:id="@+id/Img5Pager2"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img6Pager2"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
-            <ImageView
-                android:id="@+id/Img7Pager2"
-
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:scaleX="2"
-                android:scaleY="2"
-                android:layout_weight="1"
-
-                android:src="@drawable/point"
-                android:tint="@color/selectors_nav_point"
-                >
-            </ImageView>
         </LinearLayout>
     </RelativeLayout>
 

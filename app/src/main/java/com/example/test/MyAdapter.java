@@ -60,7 +60,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 String[] Track = new String[2];
                 Track[0] = holder.BufferItemAutor.getText().toString();
                 Track[1] = holder.BufferItemTrack.getText().toString();
-                String newUrl = UrlMaker.make_url(MainActivity.send_state, Track);
+                String newUrl = UrlMaker.make_url(MainActivity.models.get(MainActivity.send_state).flag, Track);
 
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");

@@ -40,10 +40,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+enum services {
+    Vk,
+    Ap,
+    Sh,
+    Dz,
+    Yb,
+    Ybm,
+    Ya
+}
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -69,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager viewPager;
     private ViewPager viewPager2;
     private Adapter adapter;
-    private ArrayList<Model> models = new ArrayList<>();
+    public static ArrayList<Model> models = new ArrayList<>();
+    private LinearLayout first_pager_nav;
+    private LinearLayout second_pager_nav;
 
     // выпадающее меню
     private Toolbar toolbar;
@@ -410,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         int count = 1;
                                         assert buffer_container != null;
                                         for (String i : buffer_container) {
-                                            text_to_send += String.valueOf(count) + ") " + UrlMaker.make_url(send_state, i.split(" - ")) + "\n";
+                                            text_to_send += String.valueOf(count) + ") " + UrlMaker.make_url(models.get(send_state).flag, i.split(" - ")) + "\n";
                                             count += 1;
                                         }
 
@@ -438,13 +449,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // скроллеры
                     {
                         // заполняем список приложений для скроллеров
-                        models.add(new Model(R.drawable.yandex));
-                        models.add(new Model(R.drawable.vk));
-                        models.add(new Model(R.drawable.youtube));
-                        models.add(new Model(R.drawable.shazam));
-                        models.add(new Model(R.drawable.deezer));
-                        models.add(new Model(R.drawable.apple));
-                        models.add(new Model(R.drawable.youtube_music));
+                        models.add(new Model(R.drawable.yandex, services.Ya));
+                        models.add(new Model(R.drawable.vk, services.Vk));
+                        models.add(new Model(R.drawable.youtube, services.Yb));
+                        models.add(new Model(R.drawable.shazam, services.Sh));
+                        models.add(new Model(R.drawable.deezer, services.Dz));
+                        models.add(new Model(R.drawable.apple, services.Ap));
+                        models.add(new Model(R.drawable.youtube_music, services.Ybm));
 
                         adapter = new Adapter(models, this);
 
@@ -452,16 +463,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         viewPager2 = findViewById(R.id.viewPager2);
                         viewPager.setAdapter(adapter);
                         viewPager2.setAdapter(adapter);
+                        first_pager_nav = findViewById(R.id.first_pager_nav);
+                        second_pager_nav = findViewById(R.id.second_pager_nav);
 
                         // горизонтальные отступы между объектами скроллеров
                         viewPager.setPadding(200, 0, 200, 0);
                         viewPager2.setPadding(200, 0, 200, 0);
 
+                        // создание навигации
+                        fill_nav(first_pager_nav);
+                        fill_nav(second_pager_nav);
+
                         // устанавливаем выбор на значения на момент закрытия
                         viewPager.setCurrentItem(open_state + models.size() * 50, false);
-                        point_it(open_state, 1);
+                        point_it(open_state, first_pager_nav);
                         viewPager2.setCurrentItem(send_state + models.size() * 50, false);
-                        point_it(send_state, 2);
+                        point_it(send_state, second_pager_nav);
 
                         // создание скроллеров
                         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -472,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onPageSelected(int position) {
                                 open_state = position % models.size();
-                                point_it(open_state, 1);
+                                point_it(open_state, first_pager_nav);
                                 save();
                             }
 
@@ -488,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onPageSelected(int position) {
                                 send_state = position % models.size();
-                                point_it(send_state, 2);
+                                point_it(send_state, second_pager_nav);
                                 save();
                             }
 
@@ -496,6 +513,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onPageScrollStateChanged(int state) {
                             }
                         });
+
                     }
 
                 }
@@ -526,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Функция: создаем требуемый url, обращаясь к классу UrlMaker
     public String make_url(int state) {
-        return UrlMaker.make_url(state, Track);
+        return UrlMaker.make_url(models.get(state).flag, Track);
     }
 
     public static void try_ad() {
@@ -542,128 +560,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Подсветка нужной точки навигации
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void point_it (int number, int pager) {
-        number += 1;
-        if (pager == 1) {
-            ImageView first = findViewById(R.id.Img1Pager1);
-            first.setImageResource(R.drawable.point);
-            first.setColorFilter(getColor(R.color.selectors_nav_point));
-            ImageView second = findViewById(R.id.Img2Pager1);
-            second.setImageResource(R.drawable.point);
-            second.setColorFilter(getColor(R.color.selectors_nav_point));
-            ImageView third = findViewById(R.id.Img3Pager1);
-            third.setImageResource(R.drawable.point);
-            third.setColorFilter(getColor(R.color.selectors_nav_point));
-            ImageView fourth = findViewById(R.id.Img4Pager1);
-            fourth.setImageResource(R.drawable.point);
-            fourth.setColorFilter(getColor(R.color.selectors_nav_point));
-            ImageView fifth = findViewById(R.id.Img5Pager1);
-            fifth.setImageResource(R.drawable.point);
-            fifth.setColorFilter(getColor(R.color.selectors_nav_point));
-            ImageView sixth = findViewById(R.id.Img6Pager1);
-            sixth.setImageResource(R.drawable.point);
-            sixth.setColorFilter(getColor(R.color.selectors_nav_point));
-            ImageView seventh = findViewById(R.id.Img7Pager1);
-            seventh.setImageResource(R.drawable.point);
-            seventh.setColorFilter(getColor(R.color.selectors_nav_point));
-            switch (number) {
-                case 1: {
-                    first.setImageResource(R.drawable.active_point);
-                    first.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
-                case 2: {
-                    second.setImageResource(R.drawable.active_point);
-                    second.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
-                case 3: {
-                    third.setImageResource(R.drawable.active_point);
-                    third.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
-                case 4: {
-                    fourth.setImageResource(R.drawable.active_point);
-                    fourth.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
-                case 5: {
-                    fifth.setImageResource(R.drawable.active_point);
-                    fifth.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
-                case 6: {
-                    sixth.setImageResource(R.drawable.active_point);
-                    sixth.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
-                case 7: {
-                    seventh.setImageResource(R.drawable.active_point);
-                    seventh.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                    break;
-                }
-            }
+    public void point_it (int number, LinearLayout pager) {
+        for (int i=0; i < models.size(); i++) {
+            ImageView cur_img = (ImageView) pager.getChildAt(i);
+            cur_img.setImageResource(R.drawable.point);
+            cur_img.setColorFilter(getColor(R.color.selectors_nav_point));
         }
-        if (pager == 2) {
-                ImageView first = findViewById(R.id.Img1Pager2);
-                first.setImageResource(R.drawable.point);
-                first.setColorFilter(getColor(R.color.selectors_nav_point));
-                ImageView second = findViewById(R.id.Img2Pager2);
-                second.setImageResource(R.drawable.point);
-                second.setColorFilter(getColor(R.color.selectors_nav_point));
-                ImageView third = findViewById(R.id.Img3Pager2);
-                third.setImageResource(R.drawable.point);
-                third.setColorFilter(getColor(R.color.selectors_nav_point));
-                ImageView fourth = findViewById(R.id.Img4Pager2);
-                fourth.setImageResource(R.drawable.point);
-                fourth.setColorFilter(getColor(R.color.selectors_nav_point));
-                ImageView fifth = findViewById(R.id.Img5Pager2);
-                fifth.setImageResource(R.drawable.point);
-                fifth.setColorFilter(getColor(R.color.selectors_nav_point));
-                ImageView sixth = findViewById(R.id.Img6Pager2);
-                sixth.setImageResource(R.drawable.point);
-                sixth.setColorFilter(getColor(R.color.selectors_nav_point));
-                ImageView seventh = findViewById(R.id.Img7Pager2);
-                seventh.setImageResource(R.drawable.point);
-                seventh.setColorFilter(getColor(R.color.selectors_nav_point));
-                switch (number) {
-                    case 1: {
-                        first.setImageResource(R.drawable.active_point);
-                        first.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                    case 2: {
-                        second.setImageResource(R.drawable.active_point);
-                        second.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                    case 3: {
-                        third.setImageResource(R.drawable.active_point);
-                        third.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                    case 4: {
-                        fourth.setImageResource(R.drawable.active_point);
-                        fourth.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                    case 5: {
-                        fifth.setImageResource(R.drawable.active_point);
-                        fifth.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                    case 6: {
-                        sixth.setImageResource(R.drawable.active_point);
-                        sixth.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                    case 7: {
-                        seventh.setImageResource(R.drawable.active_point);
-                        seventh.setColorFilter(getColor(R.color.selectors_nav_point_active));
-                        break;
-                    }
-                }
+        ImageView cur_img = (ImageView) pager.getChildAt(number);
+        cur_img.setImageResource(R.drawable.active_point);
+        cur_img.setColorFilter(getColor(R.color.selectors_nav_point_active));
+    }
+
+    // заполнение навигации по количеству сервисов в списке
+    private void fill_nav (LinearLayout pager) {
+        for (int i=0; i < models.size(); i++) {
+            ImageView imageView = new ImageView(MainActivity.this);
+            imageView.setImageResource(R.drawable.point);
+            LinearLayout.LayoutParams imageViewLayoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1f);
+            imageView.setLayoutParams(imageViewLayoutParams);
+            imageView.setScaleX(2);
+            imageView.setScaleY(2);
+            imageView.setColorFilter(getColor(R.color.selectors_nav_point));
+            pager.addView(imageView);
         }
     }
 

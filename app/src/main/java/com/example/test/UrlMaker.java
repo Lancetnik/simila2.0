@@ -10,14 +10,14 @@ import java.util.regex.Pattern;
 
 public class UrlMaker {
 
-    static String make_url (Integer open_state, String[] Track) {
+    static String make_url (services open_state, String[] Track) {
         String newUrl = null;
-        if (open_state == 0)  newUrl = MakeYandexUrl(Track);
-        if (open_state == 1)  newUrl = MakeVkUrl(Track); // not working as well
-        if (open_state == 2)  newUrl = MakeYoutubeUrl(Track);
-        if (open_state == 3)  newUrl = MakeShazamUrl(Track); // not working
-        if (open_state == 4)  newUrl = MakeDeezerUrl(Track);
-        if (open_state == 5)  newUrl = MakeAppleUrl(Track); // not working as well
+        if (open_state == services.Ya)  newUrl = MakeYandexUrl(Track);
+        if (open_state == services.Vk)  newUrl = MakeVkUrl(Track); // not working as well
+        if (open_state == services.Yb)  newUrl = MakeYoutubeUrl(Track);
+        if (open_state == services.Sh)  newUrl = MakeShazamUrl(Track); // not working
+        if (open_state == services.Dz)  newUrl = MakeDeezerUrl(Track);
+        if (open_state == services.Ap)  newUrl = MakeAppleUrl(Track); // not working as well
         return newUrl;
     }
 
