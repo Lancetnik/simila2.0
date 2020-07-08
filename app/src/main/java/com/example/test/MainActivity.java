@@ -119,6 +119,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
         }
 
+        // заполняем список приложений
+        serviceCards.add(new ServiceCard(R.drawable.yandex, services.yandex));
+        serviceCards.add(new ServiceCard(R.drawable.vk, services.vk));
+        serviceCards.add(new ServiceCard(R.drawable.youtube, services.youtube));
+        serviceCards.add(new ServiceCard(R.drawable.shazam, services.shazam));
+        serviceCards.add(new ServiceCard(R.drawable.deezer, services.deezer));
+        serviceCards.add(new ServiceCard(R.drawable.apple, services.apple));
+        serviceCards.add(new ServiceCard(R.drawable.youtube_music, services.youtubemusic));
+
         // отправляем ссылку самому себе, чтобы открыть в другом приложении
         if (intent.getClipData()!=null && String.valueOf(intent.getClipData()).contains("Simila")){
             try_ad();
@@ -436,15 +445,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     // скроллеры
                     {
-                        // заполняем список приложений для скроллеров
-                        serviceCards.add(new ServiceCard(R.drawable.yandex, services.yandex));
-                        serviceCards.add(new ServiceCard(R.drawable.vk, services.vk));
-                        serviceCards.add(new ServiceCard(R.drawable.youtube, services.youtube));
-                        serviceCards.add(new ServiceCard(R.drawable.shazam, services.shazam));
-                        serviceCards.add(new ServiceCard(R.drawable.deezer, services.deezer));
-                        serviceCards.add(new ServiceCard(R.drawable.apple, services.apple));
-                        serviceCards.add(new ServiceCard(R.drawable.youtube_music, services.youtubemusic));
-
                         adapterForPagers = new AdapterForPagers(serviceCards, this);
 
                         viewPager = findViewById(R.id.viewPager);
