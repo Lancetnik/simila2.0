@@ -11,20 +11,20 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
 
-public class Adapter extends PagerAdapter {
+public class AdapterForPagers extends PagerAdapter {
 
-    private List<Model> models;
+    private List<ServiceCard> serviceCards;
     private LayoutInflater layoutInflater;
     private Context context;
 
-    Adapter(List<Model> models, Context context) {
-        this.models = models;
+    AdapterForPagers(List<ServiceCard> serviceCards, Context context) {
+        this.serviceCards = serviceCards;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        if (models != null && models.size() > 0) return models.size() * 1000;
+        if (serviceCards != null && serviceCards.size() > 0) return serviceCards.size() * 1000;
         else return 1;
     }
 
@@ -39,10 +39,10 @@ public class Adapter extends PagerAdapter {
         View view = layoutInflater.inflate(R.layout.item, container, false);
 
         ImageView imageView;
-        int i = position % models.size();
+        int i = position % serviceCards.size();
 
         imageView = view.findViewById(R.id.current_img);
-        imageView.setImageResource(models.get(i).getImage());
+        imageView.setImageResource(serviceCards.get(i).getImage());
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

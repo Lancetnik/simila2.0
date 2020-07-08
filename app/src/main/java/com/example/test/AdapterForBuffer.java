@@ -12,20 +12,19 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+class AdapterForBuffer extends RecyclerView.Adapter<AdapterForBuffer.MyViewHolder> {
     private ArrayList<String> mDataset;
 
-    MyAdapter(ArrayList<String> myDataset) {
+    AdapterForBuffer(ArrayList<String> myDataset) {
         mDataset = myDataset;
     }
 
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterForBuffer.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         int layoutIdForListItem = R.layout.buffer_item;
 
@@ -60,7 +59,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 String[] Track = new String[2];
                 Track[0] = holder.BufferItemAutor.getText().toString();
                 Track[1] = holder.BufferItemTrack.getText().toString();
-                String newUrl = UrlMaker.make_url(MainActivity.models.get(MainActivity.send_state).flag, Track);
+                String newUrl = RequestForServer.make_url(Track, MainActivity.serviceCards.get(MainActivity.send_state).flag);
 
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");

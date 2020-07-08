@@ -1,11 +1,11 @@
 package com.example.test;
 
-public class Model {
+public class ServiceCard {
 
     private int image;
     public services flag;
 
-    public Model(int image, services flag) {
+    public ServiceCard(int image, services flag) {
         this.image = image;
         this.flag = flag;
     }

@@ -1,31 +1,34 @@
 package com.example.test;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-class DownloadTask extends AsyncTask<String, Void, Document> {
+class DownloadTask extends AsyncTask<String, Void, String> {
     @Override
-    protected Document doInBackground(String... params) {
-        Document html = null;
+    protected String doInBackground(String... params) {
+        String html = null;
+        int responce = 0;
         try {
-            String url = params[0];
-            if (url != null) {
-                try {
-                    html = Jsoup.connect(url).userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36")
-                            .referrer("http://www.google.com")
-                            .timeout(12000)
-                            .followRedirects(true)
-                            .get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            String url1 = params[0];
+
+            URL url = new URL(url1);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            responce = con.getResponseCode();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            html = in.readLine();
+            in.close();
+
         } catch (Exception e) {
             e.printStackTrace();
+            Log.w("rez", String.valueOf(e));
         }
         return html;
     }

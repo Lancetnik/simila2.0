@@ -18,14 +18,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -43,16 +40,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-enum services {
-    Vk,
-    Ap,
-    Sh,
-    Dz,
-    Yb,
-    Ybm,
-    Ya
-}
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -77,8 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // скроллеры
     private ViewPager viewPager;
     private ViewPager viewPager2;
-    private Adapter adapter;
-    public static ArrayList<Model> models = new ArrayList<>();
+    private AdapterForPagers adapterForPagers;
+    public static ArrayList<ServiceCard> serviceCards = new ArrayList<>();
     private LinearLayout first_pager_nav;
     private LinearLayout second_pager_nav;
 
@@ -164,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 // получить данные о треке и генерируем новый юрл
                 make_artist(url1);
-                String newURL = make_url(send_state);
 
                 // сохраняем в буфер, если он выбран
                 if(Is_Buffer) {
@@ -174,12 +160,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         buffer_container.add(cur_track);
                         save();
                     }
-                    this.finish();
                 }
 
                 // отправляем напрямую, если нет буфера
                 else {
+                    String newURL = make_url(send_state);
+
                     Intent share = new Intent(Intent.ACTION_SEND);
+
                     share.setType("text/plain");
                     share.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
 
@@ -193,8 +181,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     startActivity(share);
-                    this.finish();
                 }
+                this.finish();
             }
             else {
                 // открываем само приложение
@@ -202,12 +190,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // открываем основное окно
                     setContentView(R.layout.activity_main);
 
-                        // обучалка при первом запуске
-                        if (is_first) {
-                            // tutorial start
-                            is_first = false;
-                            save();
-                        }
+                    // обучалка при первом запуске
+                    if (is_first) {
+                        // tutorial start
+                        is_first = false;
+                        save();
+                    }
 
                     // выпадающее меню
                     {
@@ -385,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             layoutManager = new LinearLayoutManager(this);
                             recyclerView.setLayoutManager(layoutManager);
                             recyclerView.setHasFixedSize(true);
-                            mAdapter = new MyAdapter(buffer_container);
+                            mAdapter = new AdapterForBuffer(buffer_container);
                             recyclerView.setAdapter(mAdapter);
                         }
 
@@ -421,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         int count = 1;
                                         assert buffer_container != null;
                                         for (String i : buffer_container) {
-                                            text_to_send += String.valueOf(count) + ") " + UrlMaker.make_url(models.get(send_state).flag, i.split(" - ")) + "\n";
+                                            text_to_send += String.valueOf(count) + ") " + RequestForServer.make_url(i.split(" - "), serviceCards.get(send_state).flag) + "\n";
                                             count += 1;
                                         }
 
@@ -446,23 +434,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
 
-                        // скроллеры
+                    // скроллеры
                     {
                         // заполняем список приложений для скроллеров
-                        models.add(new Model(R.drawable.yandex, services.Ya));
-                        models.add(new Model(R.drawable.vk, services.Vk));
-                        models.add(new Model(R.drawable.youtube, services.Yb));
-                        models.add(new Model(R.drawable.shazam, services.Sh));
-                        models.add(new Model(R.drawable.deezer, services.Dz));
-                        models.add(new Model(R.drawable.apple, services.Ap));
-                        models.add(new Model(R.drawable.youtube_music, services.Ybm));
+                        serviceCards.add(new ServiceCard(R.drawable.yandex, services.yandex));
+                        serviceCards.add(new ServiceCard(R.drawable.vk, services.vk));
+                        serviceCards.add(new ServiceCard(R.drawable.youtube, services.youtube));
+                        serviceCards.add(new ServiceCard(R.drawable.shazam, services.shazam));
+                        serviceCards.add(new ServiceCard(R.drawable.deezer, services.deezer));
+                        serviceCards.add(new ServiceCard(R.drawable.apple, services.apple));
+                        serviceCards.add(new ServiceCard(R.drawable.youtube_music, services.youtubemusic));
 
-                        adapter = new Adapter(models, this);
+                        adapterForPagers = new AdapterForPagers(serviceCards, this);
 
                         viewPager = findViewById(R.id.viewPager);
                         viewPager2 = findViewById(R.id.viewPager2);
-                        viewPager.setAdapter(adapter);
-                        viewPager2.setAdapter(adapter);
+                        viewPager.setAdapter(adapterForPagers);
+                        viewPager2.setAdapter(adapterForPagers);
                         first_pager_nav = findViewById(R.id.first_pager_nav);
                         second_pager_nav = findViewById(R.id.second_pager_nav);
 
@@ -475,9 +463,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         fill_nav(second_pager_nav);
 
                         // устанавливаем выбор на значения на момент закрытия
-                        viewPager.setCurrentItem(open_state + models.size() * 50, false);
+                        viewPager.setCurrentItem(open_state + serviceCards.size() * 50, false);
                         point_it(open_state, first_pager_nav);
-                        viewPager2.setCurrentItem(send_state + models.size() * 50, false);
+                        viewPager2.setCurrentItem(send_state + serviceCards.size() * 50, false);
                         point_it(send_state, second_pager_nav);
 
                         // создание скроллеров
@@ -488,7 +476,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             @Override
                             public void onPageSelected(int position) {
-                                open_state = position % models.size();
+                                open_state = position % serviceCards.size();
                                 point_it(open_state, first_pager_nav);
                                 save();
                             }
@@ -504,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             @Override
                             public void onPageSelected(int position) {
-                                send_state = position % models.size();
+                                send_state = position % serviceCards.size();
                                 point_it(send_state, second_pager_nav);
                                 save();
                             }
@@ -529,6 +517,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
     // Функция: открываем новый url способом по умолчанию
     void useUrl() {
         String newURL = make_url(open_state);
@@ -538,17 +527,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Функция: получаем данные о треке, обращаясь к классу ArtistMaker
-    public void make_artist(String url){
-        Track = ArtistMaker.make_artist(url);
-    }
+    public void make_artist(String url) {Track = RequestForServer.make_song(url);}
 
     // Функция: создаем требуемый url, обращаясь к классу UrlMaker
     public String make_url(int state) {
-        return UrlMaker.make_url(models.get(state).flag, Track);
+        return RequestForServer.make_url(Track, serviceCards.get(state).flag);
     }
 
+    // плюсуем счетчик рекламы и запускаем ее при необходимости
     public static void try_ad() {
-        Log.w("check", String.valueOf(ad_counter));
         if (!is_bought) {
             if (ad_counter > 2 && mInterstitialAd.isLoaded()) {
                 mInterstitialAd.show();
@@ -560,8 +547,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // Подсветка нужной точки навигации
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void point_it (int number, LinearLayout pager) {
-        for (int i=0; i < models.size(); i++) {
+        for (int i = 0; i < serviceCards.size(); i++) {
             ImageView cur_img = (ImageView) pager.getChildAt(i);
             cur_img.setImageResource(R.drawable.point);
             cur_img.setColorFilter(getColor(R.color.selectors_nav_point));
@@ -572,8 +560,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // заполнение навигации по количеству сервисов в списке
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void fill_nav (LinearLayout pager) {
-        for (int i=0; i < models.size(); i++) {
+        for (int i = 0; i < serviceCards.size(); i++) {
             ImageView imageView = new ImageView(MainActivity.this);
             imageView.setImageResource(R.drawable.point);
             LinearLayout.LayoutParams imageViewLayoutParams = new LinearLayout.LayoutParams(
@@ -652,14 +641,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // открываем буфер
         mAdapter.notifyDataSetChanged();
         bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        if (buffer_container.isEmpty()) {
-            buf_title.setText("Buffer is empty");
-            Clear_button.setVisibility(View.GONE);
-            Send_button.setVisibility(View.GONE);
-            chip_buffer.setVisibility(View.VISIBLE);
-            bottom_sheet_behavior.setDraggable(false);
-        }
-        else {
+        if (!buffer_container.isEmpty()) {
+            Log.w("check", "here");
             buf_title.setText("Buffer");
             Clear_button.setVisibility(View.VISIBLE);
             Send_button.setVisibility(View.VISIBLE);
@@ -669,6 +652,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    // нажатия на кнопки в меню
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             // туториалы
@@ -697,55 +681,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
         }
         return true;
-    }
-
-    /* так отслеживаются приложения, которые могут принять интент (проброс пробного интента)
-    Мы можем сделать выбор только из установленных приложений, а не из всех
-    void find_apps () {
-        Intent intent = new Intent(null, dataUri);
-        intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-    }*/
-
-    // кастомное выпадающее меню
-    public static class PopupMenuCustomLayout {
-        private PopupMenuCustomOnClickListener onClickListener;
-        private Context context;
-        private PopupWindow popupWindow;
-        private int rLayoutId;
-        private View popupView;
-
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        public PopupMenuCustomLayout(Context context, int rLayoutId, PopupMenuCustomOnClickListener onClickListener) {
-            this.context = context;
-            this.onClickListener = onClickListener;
-            this.rLayoutId = rLayoutId;
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-            popupView = inflater.inflate(rLayoutId, null);
-            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            boolean focusable = true;
-            popupWindow = new PopupWindow(popupView, width, height, focusable);
-            popupWindow.setElevation(10);
-
-            LinearLayout linearLayout = (LinearLayout) popupView;
-            for (int i = 0; i < linearLayout.getChildCount(); i++) {
-                View v = linearLayout.getChildAt(i);
-                v.setOnClickListener( v1 -> { onClickListener.onClick( v1.getId()); popupWindow.dismiss(); });
-            }
-        }
-        public void setAnimationStyle( int animationStyle) {
-            popupWindow.setAnimationStyle(animationStyle);
-        }
-        public void show() {
-            popupWindow.showAtLocation( popupView, Gravity.CENTER, 0, 0);
-        }
-
-        public void show( View anchorView, int offsetX, int offsetY) {
-            popupWindow.showAsDropDown( anchorView, 4 + offsetX, -2 * (anchorView.getHeight()) - offsetY);
-        }
-
-        public interface PopupMenuCustomOnClickListener {
-            public void onClick(int menuItemId);
-        }
     }
 }

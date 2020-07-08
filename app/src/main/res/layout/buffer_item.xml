@@ -46,7 +46,6 @@
 
             android:layout_gravity="center_vertical"
 
-
             app:srcCompat="@drawable/delete_outline"
             app:tint="@color/for_buffer_light"
             app:fabCustomSize="40dp"
