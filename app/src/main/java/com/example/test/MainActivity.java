@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // реклама
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static boolean use_last_sender = false;
     public static String last_sender_app; // последний сервис, куда отправляли
 
-    String[] Track;
+    static String[] Track;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // заполняем список приложений
+        if (!serviceCards.isEmpty()) serviceCards.clear();
         serviceCards.add(new ServiceCard(R.drawable.yandex, services.yandex));
         serviceCards.add(new ServiceCard(R.drawable.vk, services.vk));
         serviceCards.add(new ServiceCard(R.drawable.youtube, services.youtube));
@@ -156,42 +158,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     url1 = m.group().substring(0, (m.group().length() - 3));
 
                 // если ссылка из шазама, то открываем ее в своем приложении по умолчанию
-                if (url1.contains("shazam") && special_shazam) useUrl();
-
-                // получить данные о треке и генерируем новый юрл
-                make_artist(url1);
+                if (url1.contains("shazam") && special_shazam) {
+                    String newURL = RequestForServer.url_to_url(url1, open_state);
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newURL));
+                    startActivity(browserIntent);
+                    this.finish();
+                }
 
                 // сохраняем в буфер, если он выбран
-                if(Is_Buffer) {
-                    String cur_track = Track[0]+" - "+Track[1];
-                    // если трек еще не в буфере
-                    if (!buffer_container.contains(cur_track)) {
-                        buffer_container.add(cur_track);
-                        save();
+                if (Is_Buffer) {
+                    Track = RequestForServer.make_song(url1);
+                    // ошибка
+                    if(!ErrorMaker.if_error(MainActivity.this, Track[1])){
+                        String cur_track = Track[0] + " - " + Track[1];
+                        // если трек еще не в буфере
+                        if (!buffer_container.contains(cur_track)) {
+                            buffer_container.add(cur_track);
+                            save();
+                        }
                     }
+                    this.finish();
                 }
 
                 // отправляем напрямую, если нет буфера
                 else {
-                    String newURL = make_url(send_state);
+                    String newURL = RequestForServer.url_to_url(url1, send_state);
+                    if (!ErrorMaker.if_error(MainActivity.this, newURL)) {
+                        Intent share = new Intent(Intent.ACTION_SEND);
 
-                    Intent share = new Intent(Intent.ACTION_SEND);
+                        share.setType("text/plain");
+                        share.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
 
-                    share.setType("text/plain");
-                    share.putExtra(Intent.EXTRA_TEXT, newURL + " сгенерировано с помощью Simila");
+                        if (use_last_sender && !last_sender_app.equals(""))
+                            share.setPackage(last_sender_app);
+                        else {
+                            PendingIntent pi = PendingIntent.getBroadcast(this, 0,
+                                    new Intent(this, Receiver.class),
+                                    PendingIntent.FLAG_UPDATE_CURRENT);
+                            share = Intent.createChooser(share, null, pi.getIntentSender());
+                        }
 
-                    if (use_last_sender && !last_sender_app.equals(""))
-                        share.setPackage(last_sender_app);
-                    else {
-                        PendingIntent pi = PendingIntent.getBroadcast(this, 0,
-                                new Intent(this, Receiver.class),
-                                PendingIntent.FLAG_UPDATE_CURRENT);
-                        share = Intent.createChooser(share, null, pi.getIntentSender());
+                        startActivity(share);
                     }
-
-                    startActivity(share);
+                    this.finish();
                 }
-                this.finish();
             }
             else {
                 // открываем само приложение
@@ -418,8 +428,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         int count = 1;
                                         assert buffer_container != null;
                                         for (String i : buffer_container) {
-                                            text_to_send += String.valueOf(count) + ") " + RequestForServer.make_url(i.split(" - "), serviceCards.get(send_state).flag) + "\n";
-                                            count += 1;
+                                            String newURL = RequestForServer.make_url(i.split(" - "), send_state);
+                                            if (ErrorMaker.if_error(MainActivity.this, newURL)) continue;
+                                            else {
+                                                    text_to_send += String.valueOf(count) + ") " + newURL + "\n";
+                                                    count += 1;
+                                            }
                                         }
 
                                         Intent share = new Intent(Intent.ACTION_SEND);
@@ -508,30 +522,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // открываем полученные ссылки
                 else {
                     try_ad();
-                    // получить данные о треке
-                    make_artist(url);
-                    // выполнить новую ссылку
-                    useUrl();
+                    String newURL = RequestForServer.url_to_url(url, open_state);
+                    if (!ErrorMaker.if_error(MainActivity.this, newURL)) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newURL));
+                        startActivity(browserIntent);
+                    }
+                    this.finish();
                 }
             }
         }
-    }
-
-
-    // Функция: открываем новый url способом по умолчанию
-    void useUrl() {
-        String newURL = make_url(open_state);
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newURL));
-        startActivity(browserIntent);
-        this.onStop();
-    }
-
-    // Функция: получаем данные о треке, обращаясь к классу ArtistMaker
-    public void make_artist(String url) {Track = RequestForServer.make_song(url);}
-
-    // Функция: создаем требуемый url, обращаясь к классу UrlMaker
-    public String make_url(int state) {
-        return RequestForServer.make_url(Track, serviceCards.get(state).flag);
     }
 
     // плюсуем счетчик рекламы и запускаем ее при необходимости
