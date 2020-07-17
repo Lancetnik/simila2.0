@@ -10,7 +10,7 @@
 
     android:id="@+id/buffer_sheet"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    app:behavior_hideable="true"
+    app:behavior_hideable="false"
     app:behavior_skipCollapsed="true"
     app:behavior_peekHeight="2dp"
     android:layout_marginTop="42dp">
@@ -82,7 +82,6 @@
                     app:borderWidth="0dp"
                     android:elevation="0dp"
                     />
-
 
             </LinearLayout>
 

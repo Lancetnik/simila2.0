@@ -355,7 +355,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             bottom_sheet_behavior = BottomSheetBehavior.from(buffer_sheet);
                             bottom_sheet_behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            bottom_sheet_behavior.setHideable(false);
                             if (buffer_container.isEmpty()) {
                                 buf_title.setText("Buffer is empty");
                                 Clear_button.setVisibility(View.GONE);
