@@ -74,6 +74,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
+                    android:host="open.spotify.com"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
                     android:host="music.apple.com"
                     android:scheme="https" />
             </intent-filter>

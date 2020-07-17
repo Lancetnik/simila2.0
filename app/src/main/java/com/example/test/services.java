@@ -3,7 +3,7 @@ package com.example.test;
 enum services {
     vk,
     apple,
-    shazam,
+    spotify,
     deezer,
     youtube,
     youtubemusic,

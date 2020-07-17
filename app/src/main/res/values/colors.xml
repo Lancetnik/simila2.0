@@ -2,10 +2,10 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <color name="DeepYellow">#f5eb62</color>
     <color name="LightYellow">#f5f19f</color>
-    <color name="Black">#141413</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="GreyMD">#121212</color>
 
-    <color name="font">@color/Black</color>
+    <color name="font">@color/GreyMD</color>
     <color name="for_nav_item">@color/LightYellow</color>
     <color name="for_nav_title">@color/DeepYellow</color>
     <color name="for_buffer_light">@color/LightYellow</color>

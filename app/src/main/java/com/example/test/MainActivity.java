@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         serviceCards.add(new ServiceCard(R.drawable.yandex, services.yandex));
         serviceCards.add(new ServiceCard(R.drawable.vk, services.vk));
         serviceCards.add(new ServiceCard(R.drawable.youtube, services.youtube));
-        serviceCards.add(new ServiceCard(R.drawable.shazam, services.shazam));
+        serviceCards.add(new ServiceCard(R.drawable.spotify, services.spotify));
         serviceCards.add(new ServiceCard(R.drawable.deezer, services.deezer));
         serviceCards.add(new ServiceCard(R.drawable.apple, services.apple));
         serviceCards.add(new ServiceCard(R.drawable.youtube_music, services.youtubemusic));
